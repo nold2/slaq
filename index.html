@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Hello World!</title>
+        <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';"/>
+        <script type="application/javascript" src="login.js" defer></script>
+    </head>
+    <body>
+        <h1>Hello World!</h1>
+        We are using node <script>document.write(process.versions.node)</script>,
+        Chrome <script>document.write(process.versions.chrome)</script>,
+        and Electron <script>document.write(process.versions.electron)</script>.
+
+        <form id="login">
+            <div>
+                <label for="name">Enter your name: </label>
+                <input type="text" name="name" id="name" required>
+            </div>
+
+            <div>
+                <label for="port">Enter your port: </label>
+                <input type="number" name="port" id="port" required>
+            </div>
+
+            <div>
+                <input type="submit" value="Login!">
+            </div>
+        </form>
+    </body>
+</html>
