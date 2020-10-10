@@ -27,6 +27,21 @@ ipcRenderer.on( "init", ( event, { name, port } ) => {
     state.port = port;
 } );
 
+const renderChats = ( { chats, dom } ) => {
+    dom.textContent = "";
+   chats.map( chat => {
+        const div = document.createElement( "div" );
+        div.setAttribute( "class", "bubble" );
+        div.innerHTML = `<div class="body">${chat.name}</div><div class="time">${chat.chat}</div><div class="time">${new Date( chat.date )}</div>`;
+        dom.appendChild( div );
+    } );
+};
+
+ipcRenderer.on( "load-chats", ( event, { chats } ) => {
+    renderChats( { chats, dom: chatWindow } );
+} );
+
+
 const chat = ( event ) => {
     event.preventDefault();
     const formData = new FormData( event.target );
@@ -37,6 +52,10 @@ const chat = ( event ) => {
         date: Date.now(),
         chat,
     } );
+
+    form.reset();
+
+    renderChats( { chats: state.chats, dom: chatWindow } );
 
     ipcRenderer.send( "chat-sent", state.chats );
 };
