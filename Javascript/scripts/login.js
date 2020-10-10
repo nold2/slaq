@@ -1,17 +1,17 @@
-const login = (event) => {
+const login = ( event ) => {
     event.preventDefault();
-    const formData = new FormData(event.target);
-    const name = formData.get("name");
-    const port = formData.get("port");
+    const formData = new FormData( event.target );
+    const name = formData.get( "name" );
+    const port = formData.get( "port" );
 
-    const socket = new WebSocket(`ws://localhost:${port}`);
+    const socket = new WebSocket( `ws://localhost:${port}` );
 
-    socket.addEventListener("open", () => {
-        console.log("open!");
-        socket.send(JSON.stringify({name}));
-    });
+    socket.addEventListener( "open", () => {
+        console.log( "open!" );
+        socket.send( JSON.stringify( { name } ) );
+    } );
 };
 
-const form = document.getElementById("login");
+const form = document.getElementById( "login" );
 
-form.addEventListener("submit", login);
+form.addEventListener( "submit", login );

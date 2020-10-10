@@ -5,8 +5,8 @@ module.exports = {
         "es2021": true,
         "node": true
     },
-    "ignorePatterns": ["*.json"],
-    "plugins": ["prettier"],
+    "ignorePatterns": [ "*.json" ],
+    "plugins": [ "prettier" ],
     "extends": [
         "eslint:recommended",
         "prettier"
@@ -15,7 +15,11 @@ module.exports = {
         "ecmaVersion": 12
     },
     "rules": {
-        "semi": ["error", "always"],
-        "quotes": ["error", "double"]
+        "array-bracket-spacing": [ "error", "always" ],
+        "arrow-spacing": [ "error", { "before": true, "after": true } ],
+        "object-curly-spacing": [ "error", "always" ],
+        "space-in-parens": [ "error", "always" ],
+        "semi": [ "error", "always" ],
+        "quotes": [ "error", "double" ]
     }
 };
