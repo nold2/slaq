@@ -4,6 +4,7 @@ const lodashGet = require( "lodash.get" );
 class Store extends ElectronStore {
     constructor( settings ) {
         super( settings );
+        this.chats = this.getChats()
     }
     setChats( chats ) {
         this.chats = [ ...this.chats, chats ];

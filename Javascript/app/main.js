@@ -6,6 +6,9 @@ const Store = require( "./services/store" );
 const Socket = require( "./services/socket" );
 
 const store  = new Store( { name: "Slaq - JS" } );
+const state = {
+    connection: null
+}
 
 const main = () => {
     const main  = new Window( {
@@ -23,13 +26,12 @@ const main = () => {
                 parent: main
             } );
             store.setLogin( { name, port } );
-            const connection =  new Socket( { name, port } );
-            connection.listen( data => console.log( data ) );
+            state.connection =  new Socket( { name, port } );
 
             chatRoom.webContents.on( "did-finish-load", () => {
-                connection.connect();
-                if ( connection.isConnected() ){
-                    chatRoom.webContents.send( "init", { name, port, connection: connection.isConnected() } );
+                state.connection.connect();
+                if ( state.connection.isConnected() ){
+                    chatRoom.webContents.send( "init", { name, port} );
                 }
             } );
 
@@ -38,6 +40,14 @@ const main = () => {
             } );
         }
     } );
+
+    ipcMain.on("chat-sent", (event, chats) => {
+        store.setChats(chats)
+        const last = chats[chats.length - 1]
+        const json = JSON.stringify(last)
+        const buffer = Buffer.from(json, "utf8")
+        state.connection.send(buffer)
+    })
 
 };
 
