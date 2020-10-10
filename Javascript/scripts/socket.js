@@ -13,4 +13,8 @@ class Socket extends WebSocket {
         })
     }
 
+    isConnected(){
+        return this.readyState === WebSocket.OPEN
+    }
+
 }
