@@ -26,8 +26,8 @@ const main = () => {
 
             chatRoom.webContents.on( "did-finish-load", () => {
                 connection.connect();
-                if (connection.isConnected()){
-                    chatRoom.webContents.send( "init", { name, port, connection: connection.isConnected() } )
+                if ( connection.isConnected() ){
+                    chatRoom.webContents.send( "init", { name, port, connection: connection.isConnected() } );
                 }
             } );
 
