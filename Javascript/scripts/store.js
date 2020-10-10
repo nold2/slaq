@@ -5,6 +5,14 @@ class Store extends ElectronStore {
     constructor( settings ) {
         super( settings );
     }
+    setChats(chats) {
+        this.chats = [...this.chats, chats]
+        this.set("chats", this.chats)
+    }
+
+    getChats(){
+       return lodashGet(this, `get("chats")`, [])
+    }
 
     setLogin( { name, port } ){
         this.set( "name", name );
