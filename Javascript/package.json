@@ -2,7 +2,7 @@
   "name": "slaq",
   "version": "1.0.0",
   "description": "Electron based chat-app",
-  "main": "main.js",
+  "main": "app/main.js",
   "scripts": {
     "start": "electron .",
     "test": "echo \"Error: no test specified\" && exit 1"
