@@ -1,17 +1,39 @@
-const {app, BrowserWindow} = require("electron");
+const { app, ipcMain } = require( "electron" );
 
- function createWindow(){
-    const win = new BrowserWindow({
-        width: 800,
-        height: 600,
-        webPreferences: {
-            nodeIntegration: true
+const Window = require( "./scripts/window" );
+const Store = require( "./scripts/store" );
+const Socket = require( "./scripts/socket" );
+
+const store  = new Store( { name: "Slaq - JS" } );
+const socket = ( { name, port } ) => new Socket( { name, port } );
+
+const main = () => {
+    const main  = new Window( {
+        file: "index.html"
+    } );
+
+    let chatRoom;
+
+    ipcMain.on( "login", ( event, { name, port } ) => {
+        if( !chatRoom ){
+            store.setLogin( { name, port } );
+            socket( { name, port } );
+            socket.connect();
+
+            chatRoom = new Window( {
+                file: "chats.html",
+                height: 400,
+                width: 400,
+                parent: main
+            } );
+
+            chatRoom.on( "closed", () => {
+                chatRoom = null;
+            } );
         }
-    });
+    } );
+};
 
-     win.loadFile("index.html");
+app.on( "ready", main );
 
-     win.webContents.openDevTools();
- }
-
- app.whenReady().then(createWindow);
+app.on( "window-all-closed", () => app.quit() );

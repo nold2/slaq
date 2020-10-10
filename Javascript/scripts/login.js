@@ -1,17 +1,14 @@
-const login = (event) => {
+const { ipcRenderer } = require( "electron" );
+
+const login = ( event ) => {
     event.preventDefault();
-    const formData = new FormData(event.target);
-    const name = formData.get("name");
-    const port = formData.get("port");
+    const formData = new FormData( event.target );
+    const name = formData.get( "name" );
+    const port = formData.get( "port" );
 
-    const socket = new WebSocket(`ws://localhost:${port}`);
-
-    socket.addEventListener("open", () => {
-        console.log("open!");
-        socket.send(JSON.stringify({name}));
-    });
+    ipcRenderer.send( "login", { name, port } );
 };
 
-const form = document.getElementById("login");
+const form = document.getElementById( "login" );
 
-form.addEventListener("submit", login);
+form.addEventListener( "submit", login );
