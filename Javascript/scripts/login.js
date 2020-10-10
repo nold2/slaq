@@ -1,4 +1,4 @@
-const { ipcRenderer } = require("electron");
+const { ipcRenderer } = require( "electron" );
 
 const login = ( event ) => {
     event.preventDefault();
@@ -6,7 +6,7 @@ const login = ( event ) => {
     const name = formData.get( "name" );
     const port = formData.get( "port" );
 
-    ipcRenderer.send("login", {name, port})
+    ipcRenderer.send( "login", { name, port } );
 };
 
 const form = document.getElementById( "login" );
