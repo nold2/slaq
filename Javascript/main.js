@@ -3,7 +3,7 @@ const { app, ipcMain } = require( "electron" );
 const Window = require( "./scripts/window" );
 const Store = require("./scripts/store")
 
-const chatStore  = new Store({ name: "Slaq - JS"})
+const store  = new Store({ name: "Slaq - JS"})
 
 const main = () => {
     const main  = new Window( {
@@ -12,10 +12,12 @@ const main = () => {
 
     let chatRoom;
 
-    ipcMain.on("login", ()=>{
+    ipcMain.on("login", (event, {name, port })=>{
         if(!chatRoom){
+            store.setLogin({name, port})
+
             chatRoom = new Window({
-                file: "chat.html",
+                file: "chats.html",
                 height: 400,
                 width: 400,
                 parent: main
@@ -25,10 +27,6 @@ const main = () => {
                 chatRoom = null
             })
         }
-    })
-
-    ipcMain.on("chat", (event, chat) =>{
-        chatStore.setChats(chat)
     })
 }
 
