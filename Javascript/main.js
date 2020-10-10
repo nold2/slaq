@@ -5,7 +5,6 @@ const Store = require( "./scripts/store" );
 const Socket = require( "./scripts/socket" );
 
 const store  = new Store( { name: "Slaq - JS" } );
-const socket = ( { name, port } ) => new Socket( { name, port } );
 
 const main = () => {
     const main  = new Window( {
@@ -16,15 +15,20 @@ const main = () => {
 
     ipcMain.on( "login", ( event, { name, port } ) => {
         if( !chatRoom ){
-            store.setLogin( { name, port } );
-            socket( { name, port } );
-            socket.connect();
-
             chatRoom = new Window( {
                 file: "chats.html",
                 height: 400,
                 width: 400,
                 parent: main
+            } );
+            store.setLogin( { name, port } );
+            const connection =  new Socket( { name, port } );
+
+            chatRoom.webContents.on( "did-finish-load", () => {
+                connection.connect();
+                if (connection.isConnected()){
+                    chatRoom.webContents.send( "init", { name, port, connection: connection.isConnected() } )
+                }
             } );
 
             chatRoom.on( "closed", () => {

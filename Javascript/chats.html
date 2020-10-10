@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Slaq - JS</title>
+    <link href="style.css" rel="stylesheet">
 </head>
 <body>
 <div>
@@ -12,8 +13,13 @@
     </header>
     <div id="chat-window"></div>
     <form>
-        <input type="text" name="chat" id="chat">
+        <label for="chat-box"></label>
+        <input type="text" name="chat-box" id="chat-box">
     </form>
+
+    <script defer>
+        require("./scripts/chat")
+    </script>
 </div>
 </body>
 </html>
