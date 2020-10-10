@@ -17,6 +17,12 @@ class Socket extends WebSocket {
         return this.readyState === WebSocket.OPEN;
     }
 
+    listen( callback ){
+        this.on( "message", data => {
+            callback( data );
+        } );
+    }
+
 }
 
 module.exports = Socket;

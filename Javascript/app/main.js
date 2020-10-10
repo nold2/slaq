@@ -1,14 +1,15 @@
+const path = require( "path" );
 const { app, ipcMain } = require( "electron" );
 
-const Window = require( "./scripts/window" );
-const Store = require( "./scripts/store" );
-const Socket = require( "./scripts/socket" );
+const Window = require( "./window" );
+const Store = require( "./services/store" );
+const Socket = require( "./services/socket" );
 
 const store  = new Store( { name: "Slaq - JS" } );
 
 const main = () => {
     const main  = new Window( {
-        file: "index.html"
+        file: path.join( "app", "views", "login", "index.html" ),
     } );
 
     let chatRoom;
@@ -16,13 +17,14 @@ const main = () => {
     ipcMain.on( "login", ( event, { name, port } ) => {
         if( !chatRoom ){
             chatRoom = new Window( {
-                file: "chats.html",
+                file: path.join( "app", "views", "chat", "index.html" ),
                 height: 400,
                 width: 400,
                 parent: main
             } );
             store.setLogin( { name, port } );
             const connection =  new Socket( { name, port } );
+            connection.listen( data => console.log( data ) );
 
             chatRoom.webContents.on( "did-finish-load", () => {
                 connection.connect();
@@ -36,6 +38,7 @@ const main = () => {
             } );
         }
     } );
+
 };
 
 app.on( "ready", main );
