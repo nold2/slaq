@@ -7,55 +7,58 @@ const Store = require( "./services/store" );
 const Socket = require( "./services/socket" );
 const Auth = require( "./services/authentication" );
 const User = require( "./services/user" );
-const Chat = require("./services/chat")
+const Chat = require( "./services/chat" );
+const Room = require( "./services/Room" );
 
-const session = new Auth( { User, Socket, Store, Uuid: v4 } );
-const chat = new Chat({});
+const session = new Auth( { User, Socket, Store, Uuid: v4, Room } );
 
 const main = () => {
-    const main  = new Window( {
+    const mainWindow  = new Window( {
         file: path.join( "app", "views", "login", "index.html" ),
     } );
 
-    let chatRoom;
+    let chatWindow;
 
     ipcMain.on( "login", ( event, { name, port } ) => {
-        if( !chatRoom ){
-            chatRoom = new Window( {
+        if( !chatWindow ){
+            chatWindow = new Window( {
                 file: path.join( "app", "views", "chat", "index.html" ),
                 height: 400,
                 width: 400,
-                parent: main
+                parent: mainWindow
             } );
 
-            const { user } = session
+            const { room } = session
             .setName( name )
             .setPort( port )
             .login();
 
-            chatRoom.webContents.on( "did-finish-load", () => {
-                if ( user.isConnected() ){
-                    chatRoom.webContents.send( "init", { name: user.getName(), port: user.getPort(), id: user.getID(), chat } );
+            chatWindow.webContents.on( "did-finish-load", () => {
+                const { name, port, isConnected  } = room.getDetail();
+                if ( isConnected){
+                    chatWindow.webContents.send( "init", { name, port } );
                 }
 
-                const chats = user.getChats();
+                const chats = room.getChats();
                 if ( chats && chats.length > 0 ){
-                    chatRoom.webContents.send( "load-chats", { chats } );
+                    chatWindow.webContents.send( "load-chats", { chats } );
                 }
             } );
 
-            chatRoom.on( "closed", () => {
-                chatRoom = null;
+            chatWindow.on( "closed", () => {
+                chatWindow = null;
                 session.logout();
             } );
         }
     } );
 
-/*    ipcMain.on( "chat-sent", ( event, chats ) => {
-        store.setChats( chats );
+    ipcMain.on( "chat-sent", ( event, content ) => {
+        const { user, room } = session;
+        const chat = new Chat( { userName: user.getName(), userID: user.getID(), date: new Date(), content } );
+        const chats = room.send( chat ).reload().getChats();
 
-        state.connection.send( buffer );
-    } );*/
+        chatWindow.webContents.send( "load-chats", { chats } );
+    } );
 
 };
 

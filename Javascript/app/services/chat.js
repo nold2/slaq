@@ -1,38 +1,29 @@
-const message = superclass => class extends superclass {
-    constructor(content) {
-        super()
-        this.content = content
+class Chat {
+    constructor( { userName, date, content, userID } ) {
+        this.userName = userName;
+        this.userID = userID;
+        this.date = date;
+        this.content = content;
     }
-    reply(){}
-    edit(){}
-    react(){}
-    display(){
-        return `<p>${content}</p>`
+
+    toJSON(){
+        return {
+            userName: this.userName,
+            userID: this.userID,
+            date: this.date,
+            content: this.content,
+            render: this.render()
+        };
+    }
+
+    toBuffer(){
+        const json = JSON.stringify( this.toJSON() );
+        return Buffer.from( json, "utf8" );
+    }
+
+    render() {
+        return `<p><strong>${this.userName}</strong><small>${this.date}</small></p><p>${this.content}</p>`;
     }
 }
 
-
-const metadata = superclass => class extends superclass{
-    constructor({ userName, userId, port, date, content}) {
-        super(content);
-        this.userName = userName
-        this.userId = userId
-        this.port = port
-        this.date = date
-    }
-
-    display(){
-        return `<p><strong>${this.userName}</strong> <small>${this.date}</small></p>`
-    }
-}
-
-class Base {}
-
-class Chat extends metadata(message(Base)){
-    constructor({}) {
-        super({});
-    }
-
-}
-
-module.exports = Chat
+module.exports = Chat;
