@@ -6,18 +6,9 @@ class Store extends ElectronStore {
         super( settings );
         this.chats = this.getChats();
     }
-    setChats( chats ) {
-        this.chats = [ ...this.chats, chats ];
-        this.set( "chats", this.chats );
-    }
 
     getChats(){
-       return lodashGet( this, "get(\"chats\")", [] );
-    }
-
-    setLogin( { name, port } ){
-        this.set( "name", name );
-        this.set( "port", port );
+        return lodashGet( this, "get(\"chats\")", [] );
     }
 
     getLogin() {
@@ -26,6 +17,19 @@ class Store extends ElectronStore {
 
         return { name, port };
     }
+
+    setChats( chats ) {
+        this.chats = [ ...this.chats, chats ];
+        this.set( "chats", this.chats );
+        return this
+    }
+
+    setLogin( { name, port } ){
+        this.set( "name", name );
+        this.set( "port", port );
+        return this
+    }
+
 }
 
 module.exports =  Store;
