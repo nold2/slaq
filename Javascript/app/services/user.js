@@ -10,11 +10,11 @@ class User {
     }
 
     getName(){
-        return this.store.getName();
+        return this.store.get("name");
     }
 
     getPort(){
-        return this.store.getPort();
+        return this.store.get("port")
     }
 
     isConnected(){
@@ -22,7 +22,7 @@ class User {
     }
 
     getChats(){
-        return this.store.getChats();
+        return this.store.get("chats");
     }
 
     sendChat( chat ){

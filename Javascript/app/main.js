@@ -1,14 +1,16 @@
 const path = require( "path" );
 const { app, ipcMain } = require( "electron" );
-const Uuid = require( "uuid/v4" );
+const { v4 } = require( "uuid" );
 
 const Window = require( "./window" );
 const Store = require( "./services/store" );
 const Socket = require( "./services/socket" );
 const Auth = require( "./services/authentication" );
 const User = require( "./services/user" );
+const Chat = require("./services/chat")
 
-const session = new Auth( { User, Socket, Store, Uuid } );
+const session = new Auth( { User, Socket, Store, Uuid: v4 } );
+const chat = new Chat({});
 
 const main = () => {
     const main  = new Window( {
@@ -33,7 +35,7 @@ const main = () => {
 
             chatRoom.webContents.on( "did-finish-load", () => {
                 if ( user.isConnected() ){
-                    chatRoom.webContents.send( "init", { name: user.getName(), port: user.getPort(), id: user.getID() } );
+                    chatRoom.webContents.send( "init", { name: user.getName(), port: user.getPort(), id: user.getID(), chat } );
                 }
 
                 const chats = user.getChats();

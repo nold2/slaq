@@ -18,7 +18,7 @@ const state = {
     chats: []
 };
 
-ipcRenderer.on( "init", ( event, { name, port } ) => {
+ipcRenderer.on( "init", ( event, { name, port, id, chat } ) => {
     greetings.innerText = `Hi ${name}`;
     status.innerText = `You are connected to port ${port}`;
     chatBox.disabled = false;
