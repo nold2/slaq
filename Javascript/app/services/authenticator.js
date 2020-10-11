@@ -1,4 +1,4 @@
-class Authentication {
+class Authenticator {
     constructor( { User, Uuid, Socket, Store, Room  } ) {
         this.store = new Store( { name: "Slaq - JS" } );
         this.socket = Socket;
@@ -40,4 +40,4 @@ class Authentication {
 }
 
 
-module.exports = Authentication;
+module.exports = Authenticator;
