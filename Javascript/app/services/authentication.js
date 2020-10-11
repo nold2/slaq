@@ -1,20 +1,11 @@
 class Authentication {
-    constructor( { user, Uuid } ) {
-        this.socket = null;
-        this.store = null;
+    constructor( { User, Uuid, Socket, Store  } ) {
+        this.store = new Store( { name: "Slaq - JS" } );
+        this.socket = Socket;
+        this.user = User;
         this.name = "";
         this.port = "";
-        this.user = user;
-        this.id = Uuid();
-    }
-    setSocket( socket ){
-        this.socket = socket;
-        return this;
-    }
-
-    setStore( store ){
-        this.store = store;
-        return this;
+        this.id = Uuid;
     }
 
     setName( name ){

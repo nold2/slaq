@@ -17,6 +17,10 @@ class User {
         return this.store.getPort();
     }
 
+    isConnected(){
+        return this.socket.isConnected();
+    }
+
     getChats(){
         return this.store.getChats();
     }

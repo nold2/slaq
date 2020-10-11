@@ -8,8 +8,7 @@ const Socket = require( "./services/socket" );
 const Auth = require( "./services/authentication" );
 const User = require( "./services/user" );
 
-const session = new Auth( { User, Uuid } );
-const store  = new Store( { name: "Slaq - JS" } );
+const session = new Auth( { User, Socket, Store, Uuid } );
 
 const main = () => {
     const main  = new Window( {
@@ -27,20 +26,21 @@ const main = () => {
                 parent: main
             } );
 
-            const { user } = session.setName( name )
+            const { user } = session
+            .setName( name )
             .setPort( port )
-            .setSocket( Socket )
-            .setStore( store )
             .login();
 
-            // chatRoom.webContents.on( "did-finish-load", () => {
-            //     state.connection.connect();
-            //     if ( state.connection.isConnected() ){
-            //         chatRoom.webContents.send( "init", { name, port } );
-            //     }
-            //     const chats = store.getChats();
-            //     chatRoom.webContents.send( "load-chats", { chats } );
-            // } );
+            chatRoom.webContents.on( "did-finish-load", () => {
+                if ( user.isConnected() ){
+                    chatRoom.webContents.send( "init", { name: user.getName(), port: user.getPort(), id: user.getID() } );
+                }
+
+                const chats = user.getChats();
+                if ( chats && chats.length > 0 ){
+                    chatRoom.webContents.send( "load-chats", { chats } );
+                }
+            } );
 
             chatRoom.on( "closed", () => {
                 chatRoom = null;
@@ -49,11 +49,11 @@ const main = () => {
         }
     } );
 
-    ipcMain.on( "chat-sent", ( event, chats ) => {
+/*    ipcMain.on( "chat-sent", ( event, chats ) => {
         store.setChats( chats );
 
-        // state.connection.send( buffer );
-    } );
+        state.connection.send( buffer );
+    } );*/
 
 };
 
