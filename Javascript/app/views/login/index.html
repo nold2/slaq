@@ -4,7 +4,6 @@
         <meta charset="UTF-8">
         <title>Slaq - JS</title>
         <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';"/>
-        <script type="application/javascript" src="login.js" defer></script>
         <link href="../style.css" rel="stylesheet">
     </head>
     <body>
@@ -23,5 +22,9 @@
                 <input type="submit" value="Login!">
             </div>
         </form>
+
+        <script defer>
+            require("./renderer")
+        </script>
     </body>
 </html>
