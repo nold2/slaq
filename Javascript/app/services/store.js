@@ -4,27 +4,29 @@ const lodashGet = require( "lodash.get" );
 class Store extends ElectronStore {
     constructor( settings ) {
         super( settings );
-    }
-    setChats( chats ) {
-        this.chats = [ ...this.chats, chats ];
-        this.set( "chats", this.chats );
+        this.chats = this.getChats();
     }
 
     getChats(){
-       return lodashGet( this, "get(\"chats\")", [] );
+        return lodashGet( this, "get(\"chats\")", [] );
+    }
+
+    flush(){
+        return this.clear();
+    }
+
+    setChats( chats ) {
+        this.chats = [ ...this.chats, chats ];
+        this.set( "chats", this.chats );
+        return this;
     }
 
     setLogin( { name, port } ){
         this.set( "name", name );
         this.set( "port", port );
+        return this;
     }
 
-    getLogin() {
-        const name = lodashGet( this, "get(\"name\")", "" );
-        const port = lodashGet( this, "get(\"port\")", "" );
-
-        return { name, port };
-    }
 }
 
 module.exports =  Store;

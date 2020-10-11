@@ -1,11 +1,14 @@
 const path = require( "path" );
 const { app, ipcMain } = require( "electron" );
+const Uuid = require( "uuid/v4" );
 
 const Window = require( "./window" );
 const Store = require( "./services/store" );
 const Socket = require( "./services/socket" );
+const Auth = require( "./services/authentication" );
+const User = require( "./services/user" );
 
-const store  = new Store( { name: "Slaq - JS" } );
+const session = new Auth( { User, Socket, Store, Uuid } );
 
 const main = () => {
     const main  = new Window( {
@@ -22,25 +25,41 @@ const main = () => {
                 width: 400,
                 parent: main
             } );
-            store.setLogin( { name, port } );
-            const connection =  new Socket( { name, port } );
-            connection.listen( data => console.log( data ) );
+
+            const { user } = session
+            .setName( name )
+            .setPort( port )
+            .login();
 
             chatRoom.webContents.on( "did-finish-load", () => {
-                connection.connect();
-                if ( connection.isConnected() ){
-                    chatRoom.webContents.send( "init", { name, port, connection: connection.isConnected() } );
+                if ( user.isConnected() ){
+                    chatRoom.webContents.send( "init", { name: user.getName(), port: user.getPort(), id: user.getID() } );
+                }
+
+                const chats = user.getChats();
+                if ( chats && chats.length > 0 ){
+                    chatRoom.webContents.send( "load-chats", { chats } );
                 }
             } );
 
             chatRoom.on( "closed", () => {
                 chatRoom = null;
+                session.logout();
             } );
         }
     } );
+
+/*    ipcMain.on( "chat-sent", ( event, chats ) => {
+        store.setChats( chats );
+
+        state.connection.send( buffer );
+    } );*/
 
 };
 
 app.on( "ready", main );
 
-app.on( "window-all-closed", () => app.quit() );
+app.on( "window-all-closed", () => {
+    app.quit();
+    session.logout();
+} );

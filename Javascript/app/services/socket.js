@@ -13,6 +13,12 @@ class Socket extends WebSocket {
         } );
     }
 
+    disconnect(){
+        this.on( "close", () => {
+            this.send( `${this.name} is disconnected from  port: ${this.port}`,{}, () => {} );
+        } );
+    }
+
     isConnected(){
         return this.readyState === WebSocket.OPEN;
     }

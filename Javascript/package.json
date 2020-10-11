@@ -19,6 +19,7 @@
   "dependencies": {
     "electron-store": "6.0.1",
     "lodash.get": "^4.4.2",
+    "uuid": "^8.3.1",
     "ws": "^7.3.1"
   }
 }
