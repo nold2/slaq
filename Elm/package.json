@@ -1,0 +1,15 @@
+{
+  "name": "slaq-elm",
+  "version": "1.0.0",
+  "description": "Slaq implementation on Elm",
+  "main": "app/main.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Arnold",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "10.1.3"
+  }
+}
