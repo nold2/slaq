@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';"/>
     <title>Slaq - JS</title>
     <link href="../style.css" rel="stylesheet">
 </head>
@@ -18,10 +19,9 @@
 
         <input type="submit" value=">">
     </form>
-
-    <script defer>
-        require("./chat")
-    </script>
 </div>
+<script defer>
+    require("./renderer")
+</script>
 </body>
 </html>

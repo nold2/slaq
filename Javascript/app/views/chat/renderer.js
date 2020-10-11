@@ -12,19 +12,10 @@ status.innerText = "You are disconnected";
 chatWindow.innerText = "It's quite here";
 chatBox.disabled = true;
 
-const state = {
-    name: "",
-    port: "",
-    chats: []
-};
-
 ipcRenderer.on( "init", ( event, { name, port } ) => {
     greetings.innerText = `Hi ${name}`;
     status.innerText = `You are connected to port ${port}`;
     chatBox.disabled = false;
-
-    state.name = name;
-    state.port = port;
 } );
 
 const renderChats = ( { chats, dom } ) => {
@@ -32,7 +23,7 @@ const renderChats = ( { chats, dom } ) => {
    chats.map( chat => {
         const div = document.createElement( "div" );
         div.setAttribute( "class", "bubble" );
-        div.innerHTML = `<div class="body">${chat.name}</div><div class="time">${chat.chat}</div><div class="time">${new Date( chat.date )}</div>`;
+        div.innerHTML = chat.render
         dom.appendChild( div );
     } );
 };
@@ -42,24 +33,13 @@ ipcRenderer.on( "load-chats", ( event, { chats } ) => {
 } );
 
 
-const chat = ( event ) => {
+const submit = (event ) => {
     event.preventDefault();
     const formData = new FormData( event.target );
-    const chat = formData.get( "chat-box" );
-    state.chats = state.chats.concat( {
-        name: state.name,
-        port: state.port,
-        date: Date.now(),
-        chat,
-    } );
-
+    ipcRenderer.send( "chat-sent", formData.get( "chat-box" ) );
     form.reset();
-
-    renderChats( { chats: state.chats, dom: chatWindow } );
-
-    ipcRenderer.send( "chat-sent", state.chats );
 };
 
-form.addEventListener( "submit", chat );
+form.addEventListener( "submit", submit );
 
 
