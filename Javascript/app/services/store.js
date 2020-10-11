@@ -11,23 +11,20 @@ class Store extends ElectronStore {
         return lodashGet( this, "get(\"chats\")", [] );
     }
 
-    getLogin() {
-        const name = lodashGet( this, "get(\"name\")", "" );
-        const port = lodashGet( this, "get(\"port\")", "" );
-
-        return { name, port };
+    flush(){
+        return this.clear();
     }
 
     setChats( chats ) {
         this.chats = [ ...this.chats, chats ];
         this.set( "chats", this.chats );
-        return this
+        return this;
     }
 
     setLogin( { name, port } ){
         this.set( "name", name );
         this.set( "port", port );
-        return this
+        return this;
     }
 
 }

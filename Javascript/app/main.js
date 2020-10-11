@@ -1,12 +1,14 @@
 const path = require( "path" );
 const { app, ipcMain } = require( "electron" );
+const Uuid = require( "uuid/v4" );
 
 const Window = require( "./window" );
 const Store = require( "./services/store" );
 const Socket = require( "./services/socket" );
 const Auth = require( "./services/authentication" );
+const User = require( "./services/user" );
 
-const auth = new Auth();
+const session = new Auth( { User, Uuid } );
 const store  = new Store( { name: "Slaq - JS" } );
 
 const main = () => {
@@ -24,11 +26,12 @@ const main = () => {
                 width: 400,
                 parent: main
             } );
-            auth.setName(name)
-            auth.setPort(port)
-            auth.setSocket(Socket)
-            auth.setStore(store)
-            auth.login()
+
+            const { user } = session.setName( name )
+            .setPort( port )
+            .setSocket( Socket )
+            .setStore( store )
+            .login();
 
             // chatRoom.webContents.on( "did-finish-load", () => {
             //     state.connection.connect();
@@ -41,15 +44,14 @@ const main = () => {
 
             chatRoom.on( "closed", () => {
                 chatRoom = null;
+                session.logout();
             } );
         }
     } );
 
     ipcMain.on( "chat-sent", ( event, chats ) => {
         store.setChats( chats );
-        const last = chats[chats.length - 1];
-        const json = JSON.stringify( last );
-        const buffer = Buffer.from( json, "utf8" );
+
         // state.connection.send( buffer );
     } );
 
@@ -57,4 +59,7 @@ const main = () => {
 
 app.on( "ready", main );
 
-app.on( "window-all-closed", () => app.quit() );
+app.on( "window-all-closed", () => {
+    app.quit();
+    session.logout();
+} );
