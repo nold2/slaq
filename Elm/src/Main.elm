@@ -1,49 +1,87 @@
 module Main exposing (..)
 
 import Browser
-import Html exposing (Html, button, div, text)
-import Html.Events exposing (onClick)
+import Html exposing (Html, div, form, input, label, text)
+import Html.Attributes exposing (for, id, name, type_, value)
+import Html.Events exposing (onInput, onSubmit)
+
+
+type alias Form =
+    { userName : String
+    , userPort : String
+    }
 
 
 type alias Model =
-    { count : Int }
-
-
-initialModel : Model
-initialModel =
-    { count = 0 }
+    { form : Form }
 
 
 type Msg
-    = Increment
-    | Decrement
+    = EnteredUserName String
+    | EnteredUserPort String
+    | SubmittedForm
+
+
+init : Model
+init =
+    { form = { userName = "", userPort = "" } }
 
 
 update : Msg -> Model -> Model
 update msg model =
     case msg of
-        Increment ->
-            { model | count = model.count + 1 }
+        EnteredUserName userName ->
+            updateForm (\form -> { form | userName = userName }) model
 
-        Decrement ->
-            { model | count = model.count - 1 }
+        EnteredUserPort userPort ->
+            updateForm (\form -> { form | userPort = userPort }) model
+
+        SubmittedForm ->
+            model
+
+
+updateForm : (Form -> Form) -> Model -> Model
+updateForm transform model =
+    { model | form = transform model.form }
 
 
 view : Model -> Html Msg
-view model =
-    div []
-        [ button [ onClick Increment ] [ text "+1" ]
-        , div [] [ text <| String.fromInt model.count ]
-        , button [ onClick Decrement ] [ text "-1" ]
+view _ =
+    form [ onSubmit SubmittedForm ]
+        [ div []
+            [ label [ for "username" ] [ text "Enter Your name:" ]
+            , input
+                [ id "username"
+                , name "username"
+                , type_ "text"
+                , onInput EnteredUserName
+                ]
+                []
+            ]
+        , div []
+            [ label [ for "user-port" ] [ text "Enter Your port:" ]
+            , input
+                [ id "user-port"
+                , name "user-port"
+                , type_ "number"
+                , onInput EnteredUserPort
+                ]
+                []
+            ]
+        , div []
+            [ input
+                [ type_ "submit"
+                , value "Login!"
+                ]
+                []
+            ]
         ]
 
 
 main : Program () Model Msg
 main =
     Browser.sandbox
-        { init = initialModel
+        { init = init
         , view = view
         , update = update
         }
-
-

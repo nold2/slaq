@@ -4355,7 +4355,9 @@ function _Browser_load(url)
 		}
 	}));
 }
-var $author$project$Main$initialModel = {count: 0};
+var $author$project$Main$init = {
+	form: {userName: '', userPort: ''}
+};
 var $elm$core$Basics$EQ = {$: 'EQ'};
 var $elm$core$Basics$GT = {$: 'GT'};
 var $elm$core$Basics$LT = {$: 'LT'};
@@ -5166,78 +5168,201 @@ var $elm$browser$Browser$sandbox = function (impl) {
 			view: impl.view
 		});
 };
+var $author$project$Main$updateForm = F2(
+	function (transform, model) {
+		return _Utils_update(
+			model,
+			{
+				form: transform(model.form)
+			});
+	});
 var $author$project$Main$update = F2(
 	function (msg, model) {
-		if (msg.$ === 'Increment') {
-			return _Utils_update(
-				model,
-				{count: model.count + 1});
-		} else {
-			return _Utils_update(
-				model,
-				{count: model.count - 1});
+		switch (msg.$) {
+			case 'EnteredUserName':
+				var userName = msg.a;
+				return A2(
+					$author$project$Main$updateForm,
+					function (form) {
+						return _Utils_update(
+							form,
+							{userName: userName});
+					},
+					model);
+			case 'EnteredUserPort':
+				var userPort = msg.a;
+				return A2(
+					$author$project$Main$updateForm,
+					function (form) {
+						return _Utils_update(
+							form,
+							{userPort: userPort});
+					},
+					model);
+			default:
+				return model;
 		}
 	});
-var $author$project$Main$Decrement = {$: 'Decrement'};
-var $author$project$Main$Increment = {$: 'Increment'};
-var $elm$html$Html$button = _VirtualDom_node('button');
+var $author$project$Main$EnteredUserName = function (a) {
+	return {$: 'EnteredUserName', a: a};
+};
+var $author$project$Main$EnteredUserPort = function (a) {
+	return {$: 'EnteredUserPort', a: a};
+};
+var $author$project$Main$SubmittedForm = {$: 'SubmittedForm'};
 var $elm$html$Html$div = _VirtualDom_node('div');
-var $elm$virtual_dom$VirtualDom$Normal = function (a) {
-	return {$: 'Normal', a: a};
+var $elm$json$Json$Encode$string = _Json_wrap;
+var $elm$html$Html$Attributes$stringProperty = F2(
+	function (key, string) {
+		return A2(
+			_VirtualDom_property,
+			key,
+			$elm$json$Json$Encode$string(string));
+	});
+var $elm$html$Html$Attributes$for = $elm$html$Html$Attributes$stringProperty('htmlFor');
+var $elm$html$Html$form = _VirtualDom_node('form');
+var $elm$html$Html$Attributes$id = $elm$html$Html$Attributes$stringProperty('id');
+var $elm$html$Html$input = _VirtualDom_node('input');
+var $elm$html$Html$label = _VirtualDom_node('label');
+var $elm$html$Html$Attributes$name = $elm$html$Html$Attributes$stringProperty('name');
+var $elm$html$Html$Events$alwaysStop = function (x) {
+	return _Utils_Tuple2(x, true);
+};
+var $elm$virtual_dom$VirtualDom$MayStopPropagation = function (a) {
+	return {$: 'MayStopPropagation', a: a};
 };
 var $elm$virtual_dom$VirtualDom$on = _VirtualDom_on;
-var $elm$html$Html$Events$on = F2(
+var $elm$html$Html$Events$stopPropagationOn = F2(
 	function (event, decoder) {
 		return A2(
 			$elm$virtual_dom$VirtualDom$on,
 			event,
-			$elm$virtual_dom$VirtualDom$Normal(decoder));
+			$elm$virtual_dom$VirtualDom$MayStopPropagation(decoder));
 	});
-var $elm$html$Html$Events$onClick = function (msg) {
+var $elm$json$Json$Decode$field = _Json_decodeField;
+var $elm$json$Json$Decode$at = F2(
+	function (fields, decoder) {
+		return A3($elm$core$List$foldr, $elm$json$Json$Decode$field, decoder, fields);
+	});
+var $elm$json$Json$Decode$string = _Json_decodeString;
+var $elm$html$Html$Events$targetValue = A2(
+	$elm$json$Json$Decode$at,
+	_List_fromArray(
+		['target', 'value']),
+	$elm$json$Json$Decode$string);
+var $elm$html$Html$Events$onInput = function (tagger) {
 	return A2(
-		$elm$html$Html$Events$on,
-		'click',
-		$elm$json$Json$Decode$succeed(msg));
+		$elm$html$Html$Events$stopPropagationOn,
+		'input',
+		A2(
+			$elm$json$Json$Decode$map,
+			$elm$html$Html$Events$alwaysStop,
+			A2($elm$json$Json$Decode$map, tagger, $elm$html$Html$Events$targetValue)));
+};
+var $elm$html$Html$Events$alwaysPreventDefault = function (msg) {
+	return _Utils_Tuple2(msg, true);
+};
+var $elm$virtual_dom$VirtualDom$MayPreventDefault = function (a) {
+	return {$: 'MayPreventDefault', a: a};
+};
+var $elm$html$Html$Events$preventDefaultOn = F2(
+	function (event, decoder) {
+		return A2(
+			$elm$virtual_dom$VirtualDom$on,
+			event,
+			$elm$virtual_dom$VirtualDom$MayPreventDefault(decoder));
+	});
+var $elm$html$Html$Events$onSubmit = function (msg) {
+	return A2(
+		$elm$html$Html$Events$preventDefaultOn,
+		'submit',
+		A2(
+			$elm$json$Json$Decode$map,
+			$elm$html$Html$Events$alwaysPreventDefault,
+			$elm$json$Json$Decode$succeed(msg)));
 };
 var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
-var $author$project$Main$view = function (model) {
+var $elm$html$Html$Attributes$type_ = $elm$html$Html$Attributes$stringProperty('type');
+var $elm$html$Html$Attributes$value = $elm$html$Html$Attributes$stringProperty('value');
+var $author$project$Main$view = function (_v0) {
 	return A2(
-		$elm$html$Html$div,
-		_List_Nil,
+		$elm$html$Html$form,
+		_List_fromArray(
+			[
+				$elm$html$Html$Events$onSubmit($author$project$Main$SubmittedForm)
+			]),
 		_List_fromArray(
 			[
 				A2(
-				$elm$html$Html$button,
+				$elm$html$Html$div,
+				_List_Nil,
 				_List_fromArray(
 					[
-						$elm$html$Html$Events$onClick($author$project$Main$Increment)
-					]),
-				_List_fromArray(
-					[
-						$elm$html$Html$text('+1')
+						A2(
+						$elm$html$Html$label,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$for('username')
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text('Enter Your name:')
+							])),
+						A2(
+						$elm$html$Html$input,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$id('username'),
+								$elm$html$Html$Attributes$name('username'),
+								$elm$html$Html$Attributes$type_('text'),
+								$elm$html$Html$Events$onInput($author$project$Main$EnteredUserName)
+							]),
+						_List_Nil)
 					])),
 				A2(
 				$elm$html$Html$div,
 				_List_Nil,
 				_List_fromArray(
 					[
-						$elm$html$Html$text(
-						$elm$core$String$fromInt(model.count))
+						A2(
+						$elm$html$Html$label,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$for('user-port')
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text('Enter Your port:')
+							])),
+						A2(
+						$elm$html$Html$input,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$id('user-port'),
+								$elm$html$Html$Attributes$name('user-port'),
+								$elm$html$Html$Attributes$type_('number'),
+								$elm$html$Html$Events$onInput($author$project$Main$EnteredUserPort)
+							]),
+						_List_Nil)
 					])),
 				A2(
-				$elm$html$Html$button,
+				$elm$html$Html$div,
+				_List_Nil,
 				_List_fromArray(
 					[
-						$elm$html$Html$Events$onClick($author$project$Main$Decrement)
-					]),
-				_List_fromArray(
-					[
-						$elm$html$Html$text('-1')
+						A2(
+						$elm$html$Html$input,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$type_('submit'),
+								$elm$html$Html$Attributes$value('Login!')
+							]),
+						_List_Nil)
 					]))
 			]));
 };
 var $author$project$Main$main = $elm$browser$Browser$sandbox(
-	{init: $author$project$Main$initialModel, update: $author$project$Main$update, view: $author$project$Main$view});
+	{init: $author$project$Main$init, update: $author$project$Main$update, view: $author$project$Main$view});
 _Platform_export({'Main':{'init':$author$project$Main$main(
 	$elm$json$Json$Decode$succeed(_Utils_Tuple0))(0)}});}(this));
