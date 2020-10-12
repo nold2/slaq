@@ -4,6 +4,14 @@ import Browser
 import Html exposing (Html, div, form, input, label, text)
 import Html.Attributes exposing (for, id, name, type_, value)
 import Html.Events exposing (onInput, onSubmit)
+import Port.Socket
+    exposing
+        ( connectToSocket
+        , isConnected
+        , messageReceiver
+        , openConnection
+        , sendMessage
+        )
 
 
 type alias Form =
@@ -43,7 +51,7 @@ update msg model =
             ( updateForm (\form -> { form | userPort = userPort }) model, Cmd.none )
 
         SubmittedForm ->
-            ( model, Cmd.none )
+            ( model, sendMessage model.form.userName )
 
 
 updateForm : (Form -> Form) -> Model -> Model

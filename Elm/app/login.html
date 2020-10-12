@@ -5,12 +5,13 @@
     <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';"/>
     <title>Slaq - Elm</title>
     <link href="./style.css" rel="stylesheet">
+    <script src="login.js"></script>
 </head>
 <body>
 <main></main>
-<script src="login.js"></script>
-<script>
-    var app = Elm.Main.init({ node: document.querySelector('main') })
+<script src="socket.js" defer></script>
+<script defer>
+    window.app = Elm.Main.init({node: document.querySelector('main')})
 </script>
 </body>
 </html>

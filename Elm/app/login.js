@@ -5158,6 +5158,8 @@ var $elm$core$Platform$Sub$none = $elm$core$Platform$Sub$batch(_List_Nil);
 var $author$project$Main$subscriptions = function (_v0) {
 	return $elm$core$Platform$Sub$none;
 };
+var $elm$json$Json$Encode$string = _Json_wrap;
+var $author$project$Main$sendMessage = _Platform_outgoingPort('sendMessage', $elm$json$Json$Encode$string);
 var $author$project$Main$updateForm = F2(
 	function (transform, model) {
 		return _Utils_update(
@@ -5194,7 +5196,9 @@ var $author$project$Main$update = F2(
 						model),
 					$elm$core$Platform$Cmd$none);
 			default:
-				return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+				return _Utils_Tuple2(
+					model,
+					$author$project$Main$sendMessage(model.form.userName));
 		}
 	});
 var $author$project$Main$EnteredUserName = function (a) {
@@ -5205,7 +5209,6 @@ var $author$project$Main$EnteredUserPort = function (a) {
 };
 var $author$project$Main$SubmittedForm = {$: 'SubmittedForm'};
 var $elm$html$Html$div = _VirtualDom_node('div');
-var $elm$json$Json$Encode$string = _Json_wrap;
 var $elm$html$Html$Attributes$stringProperty = F2(
 	function (key, string) {
 		return A2(
