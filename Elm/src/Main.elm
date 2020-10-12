@@ -22,22 +22,28 @@ type Msg
     | SubmittedForm
 
 
-init : Model
-init =
-    { form = { userName = "", userPort = "" } }
+init : () -> ( Model, Cmd Msg )
+init _ =
+    ( { form =
+            { userName = ""
+            , userPort = ""
+            }
+      }
+    , Cmd.none
+    )
 
 
-update : Msg -> Model -> Model
+update : Msg -> Model -> ( Model, Cmd msg )
 update msg model =
     case msg of
         EnteredUserName userName ->
-            updateForm (\form -> { form | userName = userName }) model
+            ( updateForm (\form -> { form | userName = userName }) model, Cmd.none )
 
         EnteredUserPort userPort ->
-            updateForm (\form -> { form | userPort = userPort }) model
+            ( updateForm (\form -> { form | userPort = userPort }) model, Cmd.none )
 
         SubmittedForm ->
-            model
+            ( model, Cmd.none )
 
 
 updateForm : (Form -> Form) -> Model -> Model
@@ -78,10 +84,16 @@ view _ =
         ]
 
 
+subscriptions : Model -> Sub Msg
+subscriptions _ =
+    Sub.none
+
+
 main : Program () Model Msg
 main =
-    Browser.sandbox
+    Browser.element
         { init = init
         , view = view
         , update = update
+        , subscriptions = subscriptions
         }

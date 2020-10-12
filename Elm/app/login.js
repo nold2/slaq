@@ -4355,9 +4355,6 @@ function _Browser_load(url)
 		}
 	}));
 }
-var $author$project$Main$init = {
-	form: {userName: '', userPort: ''}
-};
 var $elm$core$Basics$EQ = {$: 'EQ'};
 var $elm$core$Basics$GT = {$: 'GT'};
 var $elm$core$Basics$LT = {$: 'LT'};
@@ -5146,27 +5143,20 @@ var $elm$core$Task$perform = F2(
 			$elm$core$Task$Perform(
 				A2($elm$core$Task$map, toMessage, task)));
 	});
+var $elm$browser$Browser$element = _Browser_element;
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
+var $author$project$Main$init = function (_v0) {
+	return _Utils_Tuple2(
+		{
+			form: {userName: '', userPort: ''}
+		},
+		$elm$core$Platform$Cmd$none);
+};
 var $elm$core$Platform$Sub$batch = _Platform_batch;
 var $elm$core$Platform$Sub$none = $elm$core$Platform$Sub$batch(_List_Nil);
-var $elm$browser$Browser$sandbox = function (impl) {
-	return _Browser_element(
-		{
-			init: function (_v0) {
-				return _Utils_Tuple2(impl.init, $elm$core$Platform$Cmd$none);
-			},
-			subscriptions: function (_v1) {
-				return $elm$core$Platform$Sub$none;
-			},
-			update: F2(
-				function (msg, model) {
-					return _Utils_Tuple2(
-						A2(impl.update, msg, model),
-						$elm$core$Platform$Cmd$none);
-				}),
-			view: impl.view
-		});
+var $author$project$Main$subscriptions = function (_v0) {
+	return $elm$core$Platform$Sub$none;
 };
 var $author$project$Main$updateForm = F2(
 	function (transform, model) {
@@ -5181,26 +5171,30 @@ var $author$project$Main$update = F2(
 		switch (msg.$) {
 			case 'EnteredUserName':
 				var userName = msg.a;
-				return A2(
-					$author$project$Main$updateForm,
-					function (form) {
-						return _Utils_update(
-							form,
-							{userName: userName});
-					},
-					model);
+				return _Utils_Tuple2(
+					A2(
+						$author$project$Main$updateForm,
+						function (form) {
+							return _Utils_update(
+								form,
+								{userName: userName});
+						},
+						model),
+					$elm$core$Platform$Cmd$none);
 			case 'EnteredUserPort':
 				var userPort = msg.a;
-				return A2(
-					$author$project$Main$updateForm,
-					function (form) {
-						return _Utils_update(
-							form,
-							{userPort: userPort});
-					},
-					model);
+				return _Utils_Tuple2(
+					A2(
+						$author$project$Main$updateForm,
+						function (form) {
+							return _Utils_update(
+								form,
+								{userPort: userPort});
+						},
+						model),
+					$elm$core$Platform$Cmd$none);
 			default:
-				return model;
+				return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 		}
 	});
 var $author$project$Main$EnteredUserName = function (a) {
@@ -5362,7 +5356,7 @@ var $author$project$Main$view = function (_v0) {
 					]))
 			]));
 };
-var $author$project$Main$main = $elm$browser$Browser$sandbox(
-	{init: $author$project$Main$init, update: $author$project$Main$update, view: $author$project$Main$view});
+var $author$project$Main$main = $elm$browser$Browser$element(
+	{init: $author$project$Main$init, subscriptions: $author$project$Main$subscriptions, update: $author$project$Main$update, view: $author$project$Main$view});
 _Platform_export({'Main':{'init':$author$project$Main$main(
 	$elm$json$Json$Decode$succeed(_Utils_Tuple0))(0)}});}(this));
