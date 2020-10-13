@@ -4,31 +4,25 @@ class Socket extends WebSocket {
     constructor( { port, name } ) {
         super( `ws://localhost:${port}`, [], {} );
         this.name = name;
-        this.port  = port;
+        this.port = port;
     }
 
-    connect(){
+    connect() {
         this.on( "open", () => {
-            this.send( `${this.name} is on port: ${this.port}`, {}, () => {} );
+            this.send( `${this.name} is on port: ${this.port}`, {}, () => {
+            } );
         } );
     }
 
-    disconnect(){
+    disconnect() {
         this.on( "close", () => {
-            console.log("disconnected")
+            console.log( "disconnected" );
         } );
     }
 
-    isConnected(){
+    isConnected() {
         return this.readyState === WebSocket.OPEN;
     }
-
-    listen( callback ){
-        this.on( "message", data => {
-            callback( data );
-        } );
-    }
-
 }
 
 module.exports = Socket;
