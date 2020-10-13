@@ -13,14 +13,14 @@ const Room = require( "./services/Room" );
 const session = new Auth( { User, Socket, Store, Uuid: v4, Room } );
 
 const main = () => {
-    const mainWindow  = new Window( {
+    const mainWindow = new Window( {
         file: path.join( "app", "views", "login", "index.html" ),
     } );
 
     let chatWindow;
 
     ipcMain.on( "login", ( event, { name, port } ) => {
-        if( !chatWindow ){
+        if ( !chatWindow ) {
             chatWindow = new Window( {
                 file: path.join( "app", "views", "chat", "index.html" ),
                 height: 400,
@@ -28,19 +28,27 @@ const main = () => {
                 parent: mainWindow
             } );
 
-            const { room } = session
-            .setName( name )
-            .setPort( port )
-            .login();
+            const { room, socket } = session
+                .setName( name )
+                .setPort( port )
+                .login();
+            
+            socket.addEventListener( "message", ( event ) => {
+                const { userName, userID, date, content } = JSON.parse( event.data.toString() );
+                const chat = new Chat( { userName, userID, date, content } );
+                const chats = room.receive( chat ).reload().getChats();
+
+                chatWindow.webContents.send( "load-chats", { chats } );
+            } );
 
             chatWindow.webContents.on( "did-finish-load", () => {
-                const { name, port, isConnected  } = room.getDetail();
-                if ( isConnected){
+                const { name, port, isConnected } = room.getDetail();
+                if ( isConnected ) {
                     chatWindow.webContents.send( "init", { name, port } );
                 }
 
                 const chats = room.getChats();
-                if ( chats && chats.length > 0 ){
+                if ( chats && chats.length > 0 ) {
                     chatWindow.webContents.send( "load-chats", { chats } );
                 }
             } );
