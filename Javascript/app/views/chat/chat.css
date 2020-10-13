@@ -72,3 +72,7 @@ body {
 .chat-submit__button {
     flex: 0 0 10%;
 }
+
+.chat-username {
+    margin-right: 10px;
+}
