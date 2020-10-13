@@ -6,12 +6,15 @@
     <title>Slaq - Elm</title>
     <link href="./style.css" rel="stylesheet">
     <script src="login.js"></script>
+    <script type='text/javascript' src='ports/PortFunnel.js'></script>
+    <script type='text/javascript' src='ports/WebSocket.js'></script>
 </head>
 <body>
 <main></main>
-<script src="socket.js" defer></script>
 <script defer>
-    window.app = Elm.Main.init({node: document.querySelector('main')})
+    const app = Elm.Main.init({node: document.querySelector('main')})
+
+    PortFunnel.subscribe(app);
 </script>
 </body>
 </html>
