@@ -1,4 +1,6 @@
 body {
+    height: 100%;
+    overflow: hidden;
     max-width: 100%;
     overflow-x: auto;
     display: flex;
@@ -43,7 +45,7 @@ input {
 }
 
 .submit__button {
-    background-color: #002b36;
+    background-color: #073642;
     border: none;
     color: #fff;
     border-radius: 4px;

@@ -1,9 +1,9 @@
 module Main exposing (..)
 
 import Browser
-import Html exposing (Html, a, div, footer, form, h1, input, label, main_, text)
+import Html exposing (Html, a, button, div, footer, form, h1, h3, input, label, main_, span, text)
 import Html.Attributes exposing (class, for, id, name, required, type_, value)
-import Html.Events exposing (onInput, onSubmit)
+import Html.Events exposing (onClick, onInput)
 import Port.Socket
     exposing
         ( connectToSocket
@@ -64,75 +64,83 @@ updateForm transform model =
 
 
 view : Model -> Html Msg
-view _ =
-    main_ [ class "login__container" ]
-        [ h1 [] [ text "Login to Slaq" ]
-        , div [ class "login__box" ]
-            [ form [ onSubmit SubmittedForm ]
-                [ div []
-                    [ label [ for "name" ] [ text "Enter your name:" ]
-                    , input
-                        [ id "name"
-                        , class "input_text"
-                        , name "username"
-                        , type_ "text"
-                        , required True
-                        , onInput EnteredUserName
-                        ]
-                        []
-                    ]
-                , div []
-                    [ label [ for "port" ] [ text "Enter your port:" ]
-                    , input
-                        [ id "port"
-                        , class "input_text"
-                        , name "port"
-                        , type_ "number"
-                        , required True
-                        , onInput EnteredUserPort
-                        ]
-                        []
-                    ]
+view model =
+    if model.isConnected then
+        chatView model
+
+    else
+        loginView model
+
+
+chatView : Model -> Html Msg
+chatView model =
+    div [ class "chat__container" ]
+        [ div [ class "top_nav" ]
+            [ div [ class "greetings__container" ]
+                [ h3 [ id "greetings", class "greetings-name" ] [ text model.form.userName ]
+                , span [ class "greetings-connection" ] []
                 ]
-            , div []
-                [ input
-                    [ class "submit__button"
-                    , type_ "submit"
-                    , value "Login!"
-                    ]
-                    []
-                ]
+            , span [ class "logout" ] [ text "Logout" ]
+            ]
+        , div [ id "chat-window", class "chat-window" ] []
+        , form [ id "send-chat", class "chat-box__container" ]
+            [ label [ for "chat-box" ] []
+            , input [ type_ "text", name "chat-box", id "chat-box", class "chat-box__input" ] []
+            , input [ type_ "submit", value "submit", class "chat-submit__button" ] []
             ]
         ]
 
 
-
---[ onSubmit SubmittedForm ]
---[ div []
---    [ label [ for "username" ] [ text "Enter Your name:" ]
---    , input
---        [
---        ]
---        []
---    ]
---, div []
---    [ label [ for "user-port" ] [ text "Enter Your port:" ]
---    , input
---        [ id "user-port"
---        , name "user-port"
---        , type_ "number"
---        , onInput EnteredUserPort
---        ]
---        []
---    ]
---, div []
---    [ input
---        [ type_ "submit"
---        , value "Login!"
---        ]
---        []
---    ]
---]
+loginView : Model -> Html Msg
+loginView model =
+    div []
+        [ main_ [ class "login__container" ]
+            [ h1 [] [ text "Login to Slaq" ]
+            , div [ class "login__box" ]
+                [ form []
+                    [ div []
+                        [ label [ for "name" ] [ text "Enter your name:" ]
+                        , input
+                            [ id "name"
+                            , class "input_text"
+                            , value model.form.userName
+                            , name "username"
+                            , type_ "text"
+                            , required True
+                            , onInput EnteredUserName
+                            ]
+                            []
+                        ]
+                    , div []
+                        [ label [ for "port" ] [ text "Enter your port:" ]
+                        , input
+                            [ id "port"
+                            , class "input_text"
+                            , value model.form.userPort
+                            , name "port"
+                            , type_ "number"
+                            , required True
+                            , onInput EnteredUserPort
+                            ]
+                            []
+                        ]
+                    ]
+                , div []
+                    [ button
+                        [ class "submit__button"
+                        , type_ "submit"
+                        , onClick SubmittedForm
+                        ]
+                        []
+                    ]
+                ]
+            ]
+        , footer [ class "footer" ]
+            [ a [] [ text "About us " ]
+            , a [] [ text "Privacy & Terms" ]
+            , a [] [ text "Contact Us" ]
+            ]
+        ]
 
 
 subscriptions : Model -> Sub Msg
