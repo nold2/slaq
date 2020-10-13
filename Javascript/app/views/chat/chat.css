@@ -50,6 +50,7 @@ body {
 
 .chat-window {
     overflow-y: auto;
+    padding-left: 10px;
 }
 
 .chat-box__container {
