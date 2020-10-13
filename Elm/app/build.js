@@ -784,11 +784,11 @@ function _Debug_crash_UNUSED(identifier, fact1, fact2, fact3, fact4)
 
 function _Debug_regionToString(region)
 {
-	if (region.M.z === region.R.z)
+	if (region.an.V === region.av.V)
 	{
-		return 'on line ' + region.M.z;
+		return 'on line ' + region.an.V;
 	}
-	return 'on lines ' + region.M.z + ' through ' + region.R.z;
+	return 'on lines ' + region.an.V + ' through ' + region.av.V;
 }
 
 
@@ -1857,9 +1857,9 @@ var _Platform_worker = F4(function(impl, flagDecoder, debugMetadata, args)
 	return _Platform_initialize(
 		flagDecoder,
 		args,
-		impl.ax,
-		impl.aF,
-		impl.aD,
+		impl.a4,
+		impl.bb,
+		impl.a9,
 		function() { return function() {} }
 	);
 });
@@ -2704,9 +2704,9 @@ var _VirtualDom_mapEventTuple = F2(function(func, tuple)
 var _VirtualDom_mapEventRecord = F2(function(func, record)
 {
 	return {
-		v: func(record.v),
-		N: record.N,
-		K: record.K
+		M: func(record.M),
+		ao: record.ao,
+		al: record.al
 	}
 });
 
@@ -2974,11 +2974,11 @@ function _VirtualDom_makeCallback(eventNode, initialHandler)
 		// 3 = Custom
 
 		var value = result.a;
-		var message = !tag ? value : tag < 3 ? value.a : value.v;
-		var stopPropagation = tag == 1 ? value.b : tag == 3 && value.N;
+		var message = !tag ? value : tag < 3 ? value.a : value.M;
+		var stopPropagation = tag == 1 ? value.b : tag == 3 && value.ao;
 		var currentEventNode = (
 			stopPropagation && event.stopPropagation(),
-			(tag == 2 ? value.b : tag == 3 && value.K) && event.preventDefault(),
+			(tag == 2 ? value.b : tag == 3 && value.al) && event.preventDefault(),
 			eventNode
 		);
 		var tagger;
@@ -3928,11 +3928,11 @@ var _Browser_element = _Debugger_element || F4(function(impl, flagDecoder, debug
 	return _Platform_initialize(
 		flagDecoder,
 		args,
-		impl.ax,
-		impl.aF,
-		impl.aD,
+		impl.a4,
+		impl.bb,
+		impl.a9,
 		function(sendToApp, initialModel) {
-			var view = impl.aG;
+			var view = impl.bd;
 			/**/
 			var domNode = args['node'];
 			//*/
@@ -3964,12 +3964,12 @@ var _Browser_document = _Debugger_document || F4(function(impl, flagDecoder, deb
 	return _Platform_initialize(
 		flagDecoder,
 		args,
-		impl.ax,
-		impl.aF,
-		impl.aD,
+		impl.a4,
+		impl.bb,
+		impl.a9,
 		function(sendToApp, initialModel) {
-			var divertHrefToApp = impl.L && impl.L(sendToApp)
-			var view = impl.aG;
+			var divertHrefToApp = impl.am && impl.am(sendToApp)
+			var view = impl.bd;
 			var title = _VirtualDom_doc.title;
 			var bodyNode = _VirtualDom_doc.body;
 			var currNode = _VirtualDom_virtualize(bodyNode);
@@ -3977,12 +3977,12 @@ var _Browser_document = _Debugger_document || F4(function(impl, flagDecoder, deb
 			{
 				_VirtualDom_divertHrefToApp = divertHrefToApp;
 				var doc = view(model);
-				var nextNode = _VirtualDom_node('body')(_List_Nil)(doc.aq);
+				var nextNode = _VirtualDom_node('body')(_List_Nil)(doc.aY);
 				var patches = _VirtualDom_diff(currNode, nextNode);
 				bodyNode = _VirtualDom_applyPatches(bodyNode, currNode, patches, sendToApp);
 				currNode = nextNode;
 				_VirtualDom_divertHrefToApp = 0;
-				(title !== doc.aE) && (_VirtualDom_doc.title = title = doc.aE);
+				(title !== doc.ba) && (_VirtualDom_doc.title = title = doc.ba);
 			});
 		}
 	);
@@ -4038,12 +4038,12 @@ function _Browser_makeAnimator(model, draw)
 
 function _Browser_application(impl)
 {
-	var onUrlChange = impl.az;
-	var onUrlRequest = impl.aA;
+	var onUrlChange = impl.a5;
+	var onUrlRequest = impl.a6;
 	var key = function() { key.a(onUrlChange(_Browser_getUrl())); };
 
 	return _Browser_document({
-		L: function(sendToApp)
+		am: function(sendToApp)
 		{
 			key.a = sendToApp;
 			_Browser_window.addEventListener('popstate', key);
@@ -4059,9 +4059,9 @@ function _Browser_application(impl)
 					var next = $elm$url$Url$fromString(href).a;
 					sendToApp(onUrlRequest(
 						(next
-							&& curr.ad === next.ad
-							&& curr.V === next.V
-							&& curr.aa.a === next.aa.a
+							&& curr.aM === next.aM
+							&& curr.aC === next.aC
+							&& curr.aI.a === next.aI.a
 						)
 							? $elm$browser$Browser$Internal(next)
 							: $elm$browser$Browser$External(href)
@@ -4069,13 +4069,13 @@ function _Browser_application(impl)
 				}
 			});
 		},
-		ax: function(flags)
+		a4: function(flags)
 		{
-			return A3(impl.ax, flags, _Browser_getUrl(), key);
+			return A3(impl.a4, flags, _Browser_getUrl(), key);
 		},
-		aG: impl.aG,
-		aF: impl.aF,
-		aD: impl.aD
+		bd: impl.bd,
+		bb: impl.bb,
+		a9: impl.a9
 	});
 }
 
@@ -4141,17 +4141,17 @@ var _Browser_decodeEvent = F2(function(decoder, event)
 function _Browser_visibilityInfo()
 {
 	return (typeof _VirtualDom_doc.hidden !== 'undefined')
-		? { av: 'hidden', ar: 'visibilitychange' }
+		? { a2: 'hidden', aZ: 'visibilitychange' }
 		:
 	(typeof _VirtualDom_doc.mozHidden !== 'undefined')
-		? { av: 'mozHidden', ar: 'mozvisibilitychange' }
+		? { a2: 'mozHidden', aZ: 'mozvisibilitychange' }
 		:
 	(typeof _VirtualDom_doc.msHidden !== 'undefined')
-		? { av: 'msHidden', ar: 'msvisibilitychange' }
+		? { a2: 'msHidden', aZ: 'msvisibilitychange' }
 		:
 	(typeof _VirtualDom_doc.webkitHidden !== 'undefined')
-		? { av: 'webkitHidden', ar: 'webkitvisibilitychange' }
-		: { av: 'hidden', ar: 'visibilitychange' };
+		? { a2: 'webkitHidden', aZ: 'webkitvisibilitychange' }
+		: { a2: 'hidden', aZ: 'visibilitychange' };
 }
 
 
@@ -4232,12 +4232,12 @@ var _Browser_call = F2(function(functionName, id)
 function _Browser_getViewport()
 {
 	return {
-		ah: _Browser_getScene(),
-		ak: {
-			am: _Browser_window.pageXOffset,
-			an: _Browser_window.pageYOffset,
-			al: _Browser_doc.documentElement.clientWidth,
-			U: _Browser_doc.documentElement.clientHeight
+		aQ: _Browser_getScene(),
+		aU: {
+			j: _Browser_window.pageXOffset,
+			k: _Browser_window.pageYOffset,
+			aV: _Browser_doc.documentElement.clientWidth,
+			aB: _Browser_doc.documentElement.clientHeight
 		}
 	};
 }
@@ -4247,8 +4247,8 @@ function _Browser_getScene()
 	var body = _Browser_doc.body;
 	var elem = _Browser_doc.documentElement;
 	return {
-		al: Math.max(body.scrollWidth, body.offsetWidth, elem.scrollWidth, elem.offsetWidth, elem.clientWidth),
-		U: Math.max(body.scrollHeight, body.offsetHeight, elem.scrollHeight, elem.offsetHeight, elem.clientHeight)
+		aV: Math.max(body.scrollWidth, body.offsetWidth, elem.scrollWidth, elem.offsetWidth, elem.clientWidth),
+		aB: Math.max(body.scrollHeight, body.offsetHeight, elem.scrollHeight, elem.offsetHeight, elem.clientHeight)
 	};
 }
 
@@ -4271,15 +4271,15 @@ function _Browser_getViewportOf(id)
 	return _Browser_withNode(id, function(node)
 	{
 		return {
-			ah: {
-				al: node.scrollWidth,
-				U: node.scrollHeight
+			aQ: {
+				aV: node.scrollWidth,
+				aB: node.scrollHeight
 			},
-			ak: {
-				am: node.scrollLeft,
-				an: node.scrollTop,
-				al: node.clientWidth,
-				U: node.clientHeight
+			aU: {
+				j: node.scrollLeft,
+				k: node.scrollTop,
+				aV: node.clientWidth,
+				aB: node.clientHeight
 			}
 		};
 	});
@@ -4309,18 +4309,18 @@ function _Browser_getElement(id)
 		var x = _Browser_window.pageXOffset;
 		var y = _Browser_window.pageYOffset;
 		return {
-			ah: _Browser_getScene(),
-			ak: {
-				am: x,
-				an: y,
-				al: _Browser_doc.documentElement.clientWidth,
-				U: _Browser_doc.documentElement.clientHeight
+			aQ: _Browser_getScene(),
+			aU: {
+				j: x,
+				k: y,
+				aV: _Browser_doc.documentElement.clientWidth,
+				aB: _Browser_doc.documentElement.clientHeight
 			},
-			at: {
-				am: x + rect.left,
-				an: y + rect.top,
-				al: rect.width,
-				U: rect.height
+			a$: {
+				j: x + rect.left,
+				k: y + rect.top,
+				aV: rect.width,
+				aB: rect.height
 			}
 		};
 	});
@@ -4761,25 +4761,25 @@ var $elm$core$Array$treeFromBuilder = F2(
 	});
 var $elm$core$Array$builderToArray = F2(
 	function (reverseNodeList, builder) {
-		if (!builder.a) {
+		if (!builder.c) {
 			return A4(
 				$elm$core$Array$Array_elm_builtin,
-				$elm$core$Elm$JsArray$length(builder.c),
+				$elm$core$Elm$JsArray$length(builder.e),
 				$elm$core$Array$shiftStep,
 				$elm$core$Elm$JsArray$empty,
-				builder.c);
+				builder.e);
 		} else {
-			var treeLen = builder.a * $elm$core$Array$branchFactor;
+			var treeLen = builder.c * $elm$core$Array$branchFactor;
 			var depth = $elm$core$Basics$floor(
 				A2($elm$core$Basics$logBase, $elm$core$Array$branchFactor, treeLen - 1));
-			var correctNodeList = reverseNodeList ? $elm$core$List$reverse(builder.d) : builder.d;
-			var tree = A2($elm$core$Array$treeFromBuilder, correctNodeList, builder.a);
+			var correctNodeList = reverseNodeList ? $elm$core$List$reverse(builder.f) : builder.f;
+			var tree = A2($elm$core$Array$treeFromBuilder, correctNodeList, builder.c);
 			return A4(
 				$elm$core$Array$Array_elm_builtin,
-				$elm$core$Elm$JsArray$length(builder.c) + treeLen,
+				$elm$core$Elm$JsArray$length(builder.e) + treeLen,
 				A2($elm$core$Basics$max, 5, depth * $elm$core$Array$shiftStep),
 				tree,
-				builder.c);
+				builder.e);
 		}
 	});
 var $elm$core$Basics$idiv = _Basics_idiv;
@@ -4792,7 +4792,7 @@ var $elm$core$Array$initializeHelp = F5(
 				return A2(
 					$elm$core$Array$builderToArray,
 					false,
-					{d: nodeList, a: (len / $elm$core$Array$branchFactor) | 0, c: tail});
+					{f: nodeList, c: (len / $elm$core$Array$branchFactor) | 0, e: tail});
 			} else {
 				var leaf = $elm$core$Array$Leaf(
 					A3($elm$core$Elm$JsArray$initialize, $elm$core$Array$branchFactor, fromIndex, fn));
@@ -4859,7 +4859,7 @@ var $elm$url$Url$Http = 0;
 var $elm$url$Url$Https = 1;
 var $elm$url$Url$Url = F6(
 	function (protocol, host, port_, path, query, fragment) {
-		return {T: fragment, V: host, Z: path, aa: port_, ad: protocol, ae: query};
+		return {ay: fragment, aC: host, aG: path, aI: port_, aM: protocol, aN: query};
 	});
 var $elm$core$String$contains = _String_contains;
 var $elm$core$String$length = _String_length;
@@ -5143,9 +5143,9 @@ var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $author$project$Main$init = function (_v0) {
 	return _Utils_Tuple2(
 		{
-			i: {v: '', F: '', G: ''},
-			H: false,
-			A: _List_fromArray(
+			t: {M: '', aa: '', ab: ''},
+			ad: false,
+			W: _List_fromArray(
 				[''])
 		},
 		$elm$core$Platform$Cmd$none);
@@ -5185,7 +5185,7 @@ var $author$project$Main$updateForm = F2(
 		return _Utils_update(
 			model,
 			{
-				i: transform(model.i)
+				t: transform(model.t)
 			});
 	});
 var $author$project$Main$update = F2(
@@ -5199,7 +5199,7 @@ var $author$project$Main$update = F2(
 						function (form) {
 							return _Utils_update(
 								form,
-								{F: userName});
+								{aa: userName});
 						},
 						model),
 					$elm$core$Platform$Cmd$none);
@@ -5211,7 +5211,7 @@ var $author$project$Main$update = F2(
 						function (form) {
 							return _Utils_update(
 								form,
-								{G: userPort});
+								{ab: userPort});
 						},
 						model),
 					$elm$core$Platform$Cmd$none);
@@ -5223,25 +5223,25 @@ var $author$project$Main$update = F2(
 						function (form) {
 							return _Utils_update(
 								form,
-								{v: message});
+								{M: message});
 						},
 						model),
 					$elm$core$Platform$Cmd$none);
 			case 2:
 				return _Utils_Tuple2(
 					model,
-					$author$project$Port$Socket$connectToSocket(model.i.G));
+					$author$project$Port$Socket$connectToSocket(model.t.ab));
 			case 3:
 				var val = msg.a;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{H: val}),
+						{ad: val}),
 					$elm$core$Platform$Cmd$none);
 			case 5:
 				return _Utils_Tuple2(
 					model,
-					$author$project$Port$Socket$sendMessage(model.i.v));
+					$author$project$Port$Socket$sendMessage(model.t.M));
 			default:
 				var message = msg.a;
 				var _new = A2(
@@ -5249,16 +5249,16 @@ var $author$project$Main$update = F2(
 					function (form) {
 						return _Utils_update(
 							form,
-							{v: ''});
+							{M: ''});
 					},
 					model);
 				return _Utils_Tuple2(
 					_Utils_update(
 						_new,
 						{
-							A: A2(
+							W: A2(
 								$elm$core$List$append,
-								model.A,
+								model.W,
 								_List_fromArray(
 									[message]))
 						}),
@@ -5360,7 +5360,7 @@ var $author$project$Main$chatView = function (model) {
 						$elm$html$Html$text(msg)
 					]));
 		},
-		model.A);
+		model.W);
 	return A2(
 		$elm$html$Html$div,
 		_List_fromArray(
@@ -5394,7 +5394,7 @@ var $author$project$Main$chatView = function (model) {
 									]),
 								_List_fromArray(
 									[
-										$elm$html$Html$text(model.i.F)
+										$elm$html$Html$text(model.t.aa)
 									])),
 								A2(
 								$elm$html$Html$span,
@@ -5448,7 +5448,7 @@ var $author$project$Main$chatView = function (model) {
 								$elm$html$Html$Attributes$name('chat-box'),
 								$elm$html$Html$Attributes$id('chat-box'),
 								$elm$html$Html$Attributes$class('chat-box__input'),
-								$elm$html$Html$Attributes$value(model.i.v),
+								$elm$html$Html$Attributes$value(model.t.M),
 								$elm$html$Html$Events$onInput($author$project$Main$EnteredMessage)
 							]),
 						_List_Nil),
@@ -5555,7 +5555,7 @@ var $author$project$Main$loginView = function (model) {
 													[
 														$elm$html$Html$Attributes$id('name'),
 														$elm$html$Html$Attributes$class('input_text'),
-														$elm$html$Html$Attributes$value(model.i.F),
+														$elm$html$Html$Attributes$value(model.t.aa),
 														$elm$html$Html$Attributes$name('username'),
 														$elm$html$Html$Attributes$type_('text'),
 														$elm$html$Html$Attributes$required(true),
@@ -5584,7 +5584,7 @@ var $author$project$Main$loginView = function (model) {
 													[
 														$elm$html$Html$Attributes$id('port'),
 														$elm$html$Html$Attributes$class('input_text'),
-														$elm$html$Html$Attributes$value(model.i.G),
+														$elm$html$Html$Attributes$value(model.t.ab),
 														$elm$html$Html$Attributes$name('port'),
 														$elm$html$Html$Attributes$type_('number'),
 														$elm$html$Html$Attributes$required(true),
@@ -5647,9 +5647,9 @@ var $author$project$Main$loginView = function (model) {
 			]));
 };
 var $author$project$Main$view = function (model) {
-	return model.H ? $author$project$Main$chatView(model) : $author$project$Main$loginView(model);
+	return model.ad ? $author$project$Main$chatView(model) : $author$project$Main$loginView(model);
 };
 var $author$project$Main$main = $elm$browser$Browser$element(
-	{ax: $author$project$Main$init, aD: $author$project$Main$subscriptions, aF: $author$project$Main$update, aG: $author$project$Main$view});
+	{a4: $author$project$Main$init, a9: $author$project$Main$subscriptions, bb: $author$project$Main$update, bd: $author$project$Main$view});
 _Platform_export({'Main':{'init':$author$project$Main$main(
 	$elm$json$Json$Decode$succeed(0))(0)}});}(this));
