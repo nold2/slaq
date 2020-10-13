@@ -1,0 +1,22 @@
+{
+  "name": "slaq",
+  "version": "1.0.0",
+  "description": "Will update README once a working solution has been reached",
+  "main": "index.js",
+  "scripts": {
+    "start:js": "cd Javascript && npm start",
+    "start:server": "docker run -p 8989:8989 -p 9898:9898 -it -v $PWD/ws-server:/app ubuntu bash -c \"/app/run_ws-server.sh\"\n",
+    "start": "npm run start:server && npm run start:js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nold2/slaq.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nold2/slaq/issues"
+  },
+  "homepage": "https://github.com/nold2/slaq#readme"
+}
