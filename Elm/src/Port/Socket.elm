@@ -1,7 +1,7 @@
 port module Port.Socket exposing
     ( connectToSocket
     , isConnected
-    , messageReceiver
+    , receiveMessage
     , sendMessage
     )
 
@@ -15,4 +15,4 @@ port isConnected : (Bool -> msg) -> Sub msg
 port sendMessage : String -> Cmd msg
 
 
-port messageReceiver : (String -> msg) -> Sub msg
+port receiveMessage : (String -> msg) -> Sub msg

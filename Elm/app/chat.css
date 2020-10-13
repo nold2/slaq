@@ -50,7 +50,7 @@
 
 .chat-box__container {
     position: absolute;
-    padding: 2px 50px;
+    padding: 2px 0;
     bottom: 0;
     display: flex;
     flex-wrap: nowrap;
@@ -62,11 +62,15 @@
     resize: none;
     padding: 10px 10px;
     height: 24px;
+    margin: 10px;
     flex: 0 0 80%;
 }
 
 .chat-submit__button {
     flex: 0 0 10%;
+    border-radius: 4px;
+    margin: 10px;
+    border: none;
 }
 
 .chat-username {

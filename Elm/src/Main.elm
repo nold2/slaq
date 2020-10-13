@@ -1,14 +1,15 @@
 module Main exposing (..)
 
 import Browser
-import Html exposing (Html, a, button, div, footer, form, h1, h3, input, label, main_, span, text)
+import Html exposing (Html, a, div, footer, form, h1, h3, input, label, main_, span, text)
 import Html.Attributes exposing (class, for, id, name, required, type_, value)
-import Html.Events exposing (onClick, onInput)
+import Html.Events exposing (onClick, onInput, onSubmit)
+import Platform.Sub exposing (batch)
 import Port.Socket
     exposing
         ( connectToSocket
         , isConnected
-        , messageReceiver
+        , receiveMessage
         , sendMessage
         )
 
@@ -16,11 +17,15 @@ import Port.Socket
 type alias Form =
     { userName : String
     , userPort : String
+    , message : String
     }
 
 
 type alias Model =
-    { isConnected : Bool, form : Form }
+    { isConnected : Bool
+    , messages : List String
+    , form : Form
+    }
 
 
 type Msg
@@ -28,14 +33,19 @@ type Msg
     | EnteredUserPort String
     | SubmittedForm
     | ConfirmConnection Bool
+    | EnteredMessage String
+    | SendMessage
+    | ReceiveMessage String
 
 
 init : () -> ( Model, Cmd Msg )
 init _ =
     ( { isConnected = False
+      , messages = [ "" ]
       , form =
             { userName = ""
             , userPort = ""
+            , message = ""
             }
       }
     , Cmd.none
@@ -51,11 +61,26 @@ update msg model =
         EnteredUserPort userPort ->
             ( updateForm (\form -> { form | userPort = userPort }) model, Cmd.none )
 
+        EnteredMessage message ->
+            ( updateForm (\form -> { form | message = message }) model, Cmd.none )
+
         SubmittedForm ->
             ( model, connectToSocket model.form.userPort )
 
         ConfirmConnection val ->
             ( { model | isConnected = val }, Cmd.none )
+
+        SendMessage ->
+            ( model, sendMessage model.form.message )
+
+        ReceiveMessage message ->
+            let
+                new =
+                    updateForm (\form -> { form | message = "" }) model
+            in
+            ( { new | messages = List.append model.messages [ message ] }
+            , Cmd.none
+            )
 
 
 updateForm : (Form -> Form) -> Model -> Model
@@ -74,6 +99,10 @@ view model =
 
 chatView : Model -> Html Msg
 chatView model =
+    let
+        messagesView =
+            List.map (\msg -> div [ class "bubble" ] [ text msg ]) model.messages
+    in
     div [ class "chat__container" ]
         [ div [ class "top_nav" ]
             [ div [ class "greetings__container" ]
@@ -82,11 +111,24 @@ chatView model =
                 ]
             , span [ class "logout" ] [ text "Logout" ]
             ]
-        , div [ id "chat-window", class "chat-window" ] []
-        , form [ id "send-chat", class "chat-box__container" ]
+        , div [ id "chat-window", class "chat-window" ] messagesView
+        , form [ id "send-chat", class "chat-box__container", onSubmit SendMessage ]
             [ label [ for "chat-box" ] []
-            , input [ type_ "text", name "chat-box", id "chat-box", class "chat-box__input" ] []
-            , input [ type_ "submit", value "submit", class "chat-submit__button" ] []
+            , input
+                [ type_ "text"
+                , name "chat-box"
+                , id "chat-box"
+                , class "chat-box__input"
+                , value model.form.message
+                , onInput EnteredMessage
+                ]
+                []
+            , input
+                [ type_ "submit"
+                , value "submit"
+                , class "chat-submit__button"
+                ]
+                []
             ]
         ]
 
@@ -126,12 +168,13 @@ loginView model =
                         ]
                     ]
                 , div []
-                    [ button
+                    [ input
                         [ class "submit__button"
                         , type_ "submit"
                         , onClick SubmittedForm
+                        , onSubmit SubmittedForm
                         ]
-                        []
+                        [ text "Login!" ]
                     ]
                 ]
             ]
@@ -145,7 +188,10 @@ loginView model =
 
 subscriptions : Model -> Sub Msg
 subscriptions _ =
-    isConnected ConfirmConnection
+    batch
+        [ isConnected ConfirmConnection
+        , receiveMessage ReceiveMessage
+        ]
 
 
 main : Program () Model Msg

@@ -4,13 +4,12 @@ window.app.ports.connectToSocket.subscribe((port) => {
     window.socket.onopen = () => {
         window.app.ports.isConnected.send(true)
     }
-})
 
-// window.app.ports.sendMessage.subscribe((message) => {
-//     window.socket.send(message)
-// })
-//
-//
-// window.socket.addEventListener("message", event => {
-//     window.app.ports.messageReceiver.send(event.data)
-// })
+    window.app.ports.sendMessage.subscribe((message) => {
+        window.socket.send(message)
+    })
+
+    window.socket.onmessage = (event) => {
+        window.app.ports.receiveMessage.send(event.data)
+    }
+})
