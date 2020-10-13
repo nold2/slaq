@@ -6,7 +6,7 @@ class Room {
         this.chats = [];
     }
 
-    getDetail(){
+    getDetail() {
         return {
             name: this.user.getName(),
             id: this.user.getID(),
@@ -15,22 +15,27 @@ class Room {
         };
     }
 
-    getChats(){
-        return this.store.get("chats")
+    getChats() {
+        return this.store.get( "chats" );
     }
 
-    reload(){
+    reload() {
         this.chats = this.store.get( "chats" );
         return this;
     }
 
-    send( chat ){
+    send( chat ) {
         this.socket.send( chat.toBuffer() );
         this.store.setChats( chat.toJSON() );
         return this;
     }
 
-    flush(){
+    receive( chat ) {
+        this.store.setChats( chat.toJSON() );
+        return this;
+    }
+
+    flush() {
         this.chats = [];
         this.user = null;
     }

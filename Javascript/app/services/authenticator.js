@@ -1,5 +1,5 @@
 class Authenticator {
-    constructor( { User, Uuid, Socket, Store, Room  } ) {
+    constructor( { User, Uuid, Socket, Store, Room } ) {
         this.store = new Store( { name: "Slaq - JS" } );
         this.socket = Socket;
         this.user = User;
@@ -9,19 +9,19 @@ class Authenticator {
         this.id = Uuid;
     }
 
-    setName( name ){
+    setName( name ) {
         this.name = name;
         return this;
     }
 
-    setPort( port ){
+    setPort( port ) {
         this.port = port;
         return this;
     }
 
-    login(){
+    login() {
         this.socket = new this.socket( { name: this.name, port: this.port } );
-        this.socket.connect()
+        this.socket.connect();
 
         this.store = this.store.setLogin( { name: this.name, port: this.port } );
 
@@ -30,10 +30,9 @@ class Authenticator {
         return this;
     }
 
-    logout(){
-        this.socket.disconnect();
-        this.store.flush();
-        this.user.reset();
+    logout() {
+        this.store.clear();
+        this.user.flush();
         this.room.flush();
         return this;
     }

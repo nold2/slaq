@@ -6,7 +6,7 @@ class Chat {
         this.content = content;
     }
 
-    toJSON(){
+    toJSON() {
         return {
             userName: this.userName,
             userID: this.userID,
@@ -16,13 +16,14 @@ class Chat {
         };
     }
 
-    toBuffer(){
+    toBuffer() {
         const json = JSON.stringify( this.toJSON() );
         return Buffer.from( json, "utf8" );
     }
 
     render() {
-        return `<p><strong>${this.userName}</strong><small>${this.date}</small></p><p>${this.content}</p>`;
+        const date = new Date( this.date ).toLocaleString();
+        return `<p><strong class="chat-username">${this.userName}</strong><small class="chat-date">${date}</small></p><p class="class-content">${this.content}</p>`;
     }
 }
 
