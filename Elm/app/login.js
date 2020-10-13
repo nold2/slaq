@@ -5149,17 +5149,21 @@ var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $author$project$Main$init = function (_v0) {
 	return _Utils_Tuple2(
 		{
-			form: {userName: '', userPort: ''}
+			form: {userName: '', userPort: ''},
+			isConnected: false
 		},
 		$elm$core$Platform$Cmd$none);
 };
-var $elm$core$Platform$Sub$batch = _Platform_batch;
-var $elm$core$Platform$Sub$none = $elm$core$Platform$Sub$batch(_List_Nil);
+var $author$project$Main$ConfirmConnection = function (a) {
+	return {$: 'ConfirmConnection', a: a};
+};
+var $elm$json$Json$Decode$bool = _Json_decodeBool;
+var $author$project$Port$Socket$isConnected = _Platform_incomingPort('isConnected', $elm$json$Json$Decode$bool);
 var $author$project$Main$subscriptions = function (_v0) {
-	return $elm$core$Platform$Sub$none;
+	return $author$project$Port$Socket$isConnected($author$project$Main$ConfirmConnection);
 };
 var $elm$json$Json$Encode$string = _Json_wrap;
-var $author$project$Main$sendMessage = _Platform_outgoingPort('sendMessage', $elm$json$Json$Encode$string);
+var $author$project$Port$Socket$connectToSocket = _Platform_outgoingPort('connectToSocket', $elm$json$Json$Encode$string);
 var $author$project$Main$updateForm = F2(
 	function (transform, model) {
 		return _Utils_update(
@@ -5195,10 +5199,17 @@ var $author$project$Main$update = F2(
 						},
 						model),
 					$elm$core$Platform$Cmd$none);
-			default:
+			case 'SubmittedForm':
 				return _Utils_Tuple2(
 					model,
-					$author$project$Main$sendMessage(model.form.userName));
+					$author$project$Port$Socket$connectToSocket(model.form.userPort));
+			default:
+				var val = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{isConnected: val}),
+					$elm$core$Platform$Cmd$none);
 		}
 	});
 var $author$project$Main$EnteredUserName = function (a) {
@@ -5208,7 +5219,6 @@ var $author$project$Main$EnteredUserPort = function (a) {
 	return {$: 'EnteredUserPort', a: a};
 };
 var $author$project$Main$SubmittedForm = {$: 'SubmittedForm'};
-var $elm$html$Html$div = _VirtualDom_node('div');
 var $elm$html$Html$Attributes$stringProperty = F2(
 	function (key, string) {
 		return A2(
@@ -5216,11 +5226,15 @@ var $elm$html$Html$Attributes$stringProperty = F2(
 			key,
 			$elm$json$Json$Encode$string(string));
 	});
+var $elm$html$Html$Attributes$class = $elm$html$Html$Attributes$stringProperty('className');
+var $elm$html$Html$div = _VirtualDom_node('div');
 var $elm$html$Html$Attributes$for = $elm$html$Html$Attributes$stringProperty('htmlFor');
 var $elm$html$Html$form = _VirtualDom_node('form');
+var $elm$html$Html$h1 = _VirtualDom_node('h1');
 var $elm$html$Html$Attributes$id = $elm$html$Html$Attributes$stringProperty('id');
 var $elm$html$Html$input = _VirtualDom_node('input');
 var $elm$html$Html$label = _VirtualDom_node('label');
+var $elm$html$Html$main_ = _VirtualDom_node('main');
 var $elm$html$Html$Attributes$name = $elm$html$Html$Attributes$stringProperty('name');
 var $elm$html$Html$Events$alwaysStop = function (x) {
 	return _Utils_Tuple2(x, true);
@@ -5278,84 +5292,123 @@ var $elm$html$Html$Events$onSubmit = function (msg) {
 			$elm$html$Html$Events$alwaysPreventDefault,
 			$elm$json$Json$Decode$succeed(msg)));
 };
+var $elm$json$Json$Encode$bool = _Json_wrap;
+var $elm$html$Html$Attributes$boolProperty = F2(
+	function (key, bool) {
+		return A2(
+			_VirtualDom_property,
+			key,
+			$elm$json$Json$Encode$bool(bool));
+	});
+var $elm$html$Html$Attributes$required = $elm$html$Html$Attributes$boolProperty('required');
 var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
 var $elm$html$Html$Attributes$type_ = $elm$html$Html$Attributes$stringProperty('type');
 var $elm$html$Html$Attributes$value = $elm$html$Html$Attributes$stringProperty('value');
 var $author$project$Main$view = function (_v0) {
 	return A2(
-		$elm$html$Html$form,
+		$elm$html$Html$main_,
 		_List_fromArray(
 			[
-				$elm$html$Html$Events$onSubmit($author$project$Main$SubmittedForm)
+				$elm$html$Html$Attributes$class('login__container')
 			]),
 		_List_fromArray(
 			[
 				A2(
-				$elm$html$Html$div,
+				$elm$html$Html$h1,
 				_List_Nil,
 				_List_fromArray(
 					[
-						A2(
-						$elm$html$Html$label,
-						_List_fromArray(
-							[
-								$elm$html$Html$Attributes$for('username')
-							]),
-						_List_fromArray(
-							[
-								$elm$html$Html$text('Enter Your name:')
-							])),
-						A2(
-						$elm$html$Html$input,
-						_List_fromArray(
-							[
-								$elm$html$Html$Attributes$id('username'),
-								$elm$html$Html$Attributes$name('username'),
-								$elm$html$Html$Attributes$type_('text'),
-								$elm$html$Html$Events$onInput($author$project$Main$EnteredUserName)
-							]),
-						_List_Nil)
+						$elm$html$Html$text('Login to Slaq')
 					])),
 				A2(
 				$elm$html$Html$div,
-				_List_Nil,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('login__box')
+					]),
 				_List_fromArray(
 					[
 						A2(
-						$elm$html$Html$label,
+						$elm$html$Html$form,
 						_List_fromArray(
 							[
-								$elm$html$Html$Attributes$for('user-port')
+								$elm$html$Html$Events$onSubmit($author$project$Main$SubmittedForm)
 							]),
 						_List_fromArray(
 							[
-								$elm$html$Html$text('Enter Your port:')
+								A2(
+								$elm$html$Html$div,
+								_List_Nil,
+								_List_fromArray(
+									[
+										A2(
+										$elm$html$Html$label,
+										_List_fromArray(
+											[
+												$elm$html$Html$Attributes$for('name')
+											]),
+										_List_fromArray(
+											[
+												$elm$html$Html$text('Enter your name:')
+											])),
+										A2(
+										$elm$html$Html$input,
+										_List_fromArray(
+											[
+												$elm$html$Html$Attributes$id('name'),
+												$elm$html$Html$Attributes$class('input_text'),
+												$elm$html$Html$Attributes$name('username'),
+												$elm$html$Html$Attributes$type_('text'),
+												$elm$html$Html$Attributes$required(true),
+												$elm$html$Html$Events$onInput($author$project$Main$EnteredUserName)
+											]),
+										_List_Nil)
+									])),
+								A2(
+								$elm$html$Html$div,
+								_List_Nil,
+								_List_fromArray(
+									[
+										A2(
+										$elm$html$Html$label,
+										_List_fromArray(
+											[
+												$elm$html$Html$Attributes$for('port')
+											]),
+										_List_fromArray(
+											[
+												$elm$html$Html$text('Enter your port:')
+											])),
+										A2(
+										$elm$html$Html$input,
+										_List_fromArray(
+											[
+												$elm$html$Html$Attributes$id('port'),
+												$elm$html$Html$Attributes$class('input_text'),
+												$elm$html$Html$Attributes$name('port'),
+												$elm$html$Html$Attributes$type_('number'),
+												$elm$html$Html$Attributes$required(true),
+												$elm$html$Html$Events$onInput($author$project$Main$EnteredUserPort)
+											]),
+										_List_Nil)
+									]))
 							])),
 						A2(
-						$elm$html$Html$input,
+						$elm$html$Html$div,
+						_List_Nil,
 						_List_fromArray(
 							[
-								$elm$html$Html$Attributes$id('user-port'),
-								$elm$html$Html$Attributes$name('user-port'),
-								$elm$html$Html$Attributes$type_('number'),
-								$elm$html$Html$Events$onInput($author$project$Main$EnteredUserPort)
-							]),
-						_List_Nil)
-					])),
-				A2(
-				$elm$html$Html$div,
-				_List_Nil,
-				_List_fromArray(
-					[
-						A2(
-						$elm$html$Html$input,
-						_List_fromArray(
-							[
-								$elm$html$Html$Attributes$type_('submit'),
-								$elm$html$Html$Attributes$value('Login!')
-							]),
-						_List_Nil)
+								A2(
+								$elm$html$Html$input,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$class('submit__button'),
+										$elm$html$Html$Attributes$type_('submit'),
+										$elm$html$Html$Attributes$value('Login!')
+									]),
+								_List_Nil)
+							]))
 					]))
 			]));
 };

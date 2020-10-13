@@ -1,15 +1,14 @@
 module Main exposing (..)
 
 import Browser
-import Html exposing (Html, div, form, input, label, text)
-import Html.Attributes exposing (for, id, name, type_, value)
+import Html exposing (Html, a, div, footer, form, h1, input, label, main_, text)
+import Html.Attributes exposing (class, for, id, name, required, type_, value)
 import Html.Events exposing (onInput, onSubmit)
 import Port.Socket
     exposing
         ( connectToSocket
         , isConnected
         , messageReceiver
-        , openConnection
         , sendMessage
         )
 
@@ -21,18 +20,20 @@ type alias Form =
 
 
 type alias Model =
-    { form : Form }
+    { isConnected : Bool, form : Form }
 
 
 type Msg
     = EnteredUserName String
     | EnteredUserPort String
     | SubmittedForm
+    | ConfirmConnection Bool
 
 
 init : () -> ( Model, Cmd Msg )
 init _ =
-    ( { form =
+    ( { isConnected = False
+      , form =
             { userName = ""
             , userPort = ""
             }
@@ -51,7 +52,10 @@ update msg model =
             ( updateForm (\form -> { form | userPort = userPort }) model, Cmd.none )
 
         SubmittedForm ->
-            ( model, sendMessage model.form.userName )
+            ( model, connectToSocket model.form.userPort )
+
+        ConfirmConnection val ->
+            ( { model | isConnected = val }, Cmd.none )
 
 
 updateForm : (Form -> Form) -> Model -> Model
@@ -61,40 +65,79 @@ updateForm transform model =
 
 view : Model -> Html Msg
 view _ =
-    form [ onSubmit SubmittedForm ]
-        [ div []
-            [ label [ for "username" ] [ text "Enter Your name:" ]
-            , input
-                [ id "username"
-                , name "username"
-                , type_ "text"
-                , onInput EnteredUserName
+    main_ [ class "login__container" ]
+        [ h1 [] [ text "Login to Slaq" ]
+        , div [ class "login__box" ]
+            [ form [ onSubmit SubmittedForm ]
+                [ div []
+                    [ label [ for "name" ] [ text "Enter your name:" ]
+                    , input
+                        [ id "name"
+                        , class "input_text"
+                        , name "username"
+                        , type_ "text"
+                        , required True
+                        , onInput EnteredUserName
+                        ]
+                        []
+                    ]
+                , div []
+                    [ label [ for "port" ] [ text "Enter your port:" ]
+                    , input
+                        [ id "port"
+                        , class "input_text"
+                        , name "port"
+                        , type_ "number"
+                        , required True
+                        , onInput EnteredUserPort
+                        ]
+                        []
+                    ]
                 ]
-                []
-            ]
-        , div []
-            [ label [ for "user-port" ] [ text "Enter Your port:" ]
-            , input
-                [ id "user-port"
-                , name "user-port"
-                , type_ "number"
-                , onInput EnteredUserPort
+            , div []
+                [ input
+                    [ class "submit__button"
+                    , type_ "submit"
+                    , value "Login!"
+                    ]
+                    []
                 ]
-                []
-            ]
-        , div []
-            [ input
-                [ type_ "submit"
-                , value "Login!"
-                ]
-                []
             ]
         ]
 
 
+
+--[ onSubmit SubmittedForm ]
+--[ div []
+--    [ label [ for "username" ] [ text "Enter Your name:" ]
+--    , input
+--        [
+--        ]
+--        []
+--    ]
+--, div []
+--    [ label [ for "user-port" ] [ text "Enter Your port:" ]
+--    , input
+--        [ id "user-port"
+--        , name "user-port"
+--        , type_ "number"
+--        , onInput EnteredUserPort
+--        ]
+--        []
+--    ]
+--, div []
+--    [ input
+--        [ type_ "submit"
+--        , value "Login!"
+--        ]
+--        []
+--    ]
+--]
+
+
 subscriptions : Model -> Sub Msg
 subscriptions _ =
-    Sub.none
+    isConnected ConfirmConnection
 
 
 main : Program () Model Msg
