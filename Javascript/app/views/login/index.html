@@ -1,30 +1,40 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <title>Slaq - JS</title>
-        <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';"/>
-        <link href="../style.css" rel="stylesheet">
-    </head>
-    <body>
+<head>
+    <meta charset="UTF-8">
+    <title>Slaq - JS</title>
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';"/>
+    <link href="../style.css" rel="stylesheet">
+    <link href="login.css" rel="stylesheet">
+</head>
+<body>
+<main class="login__container">
+    <h1>Login to Slaq</h1>
+    <div class="login__box">
         <form id="login">
             <div>
                 <label for="name">Enter your name: </label>
-                <input type="text" name="name" id="name" required>
+                <input class="input_text" type="text" name="name" id="name" required>
             </div>
 
             <div>
                 <label for="port">Enter your port: </label>
-                <input type="number" name="port" id="port" required>
+                <input class="input_text" type="number" name="port" id="port" required>
             </div>
 
             <div>
-                <input type="submit" value="Login!">
+                <input class="submit__button" type="submit" value="Login!">
             </div>
         </form>
-
-        <script defer>
-            require("./renderer")
-        </script>
-    </body>
+    </div>
+</main>
+<footer class="footer">
+    <a>About us</a>
+    <a>Privacy & Terms</a>
+    <a>Contact Us</a>
+</footer>
+<script defer>
+    require("./renderer")
+</script>
+</body>
 </html>

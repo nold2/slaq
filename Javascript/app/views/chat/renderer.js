@@ -1,14 +1,12 @@
 const { ipcRenderer } = require( "electron" );
 
 const greetings = document.getElementById( "greetings" );
-const status = document.getElementById( "status" );
 
 const chatWindow = document.getElementById( "chat-window" );
 const chatBox = document.getElementById( "chat-box" );
 
 const form = document.getElementById( "send-chat" );
 
-status.innerText = "You are disconnected";
 chatWindow.innerText = "It's quite here";
 chatBox.disabled = true;
 
@@ -20,10 +18,10 @@ ipcRenderer.on( "init", ( event, { name, port } ) => {
 
 const renderChats = ( { chats, dom } ) => {
     dom.textContent = "";
-   chats.map( chat => {
+    chats.map( chat => {
         const div = document.createElement( "div" );
         div.setAttribute( "class", "bubble" );
-        div.innerHTML = chat.render
+        div.innerHTML = chat.render;
         dom.appendChild( div );
     } );
 };
@@ -33,7 +31,7 @@ ipcRenderer.on( "load-chats", ( event, { chats } ) => {
 } );
 
 
-const submit = (event ) => {
+const submit = ( event ) => {
     event.preventDefault();
     const formData = new FormData( event.target );
     ipcRenderer.send( "chat-sent", formData.get( "chat-box" ) );
