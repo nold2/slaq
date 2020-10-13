@@ -1,3 +1,17 @@
+body, html {
+    height: 100%;
+}
+
 body {
     font: caption;
+    font-size: 16px;
+    background-color: #EBEAEB;
+}
+
+input {
+    font-size: 16px;
+}
+
+label {
+    font-size: 14px;
 }
