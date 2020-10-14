@@ -6,10 +6,21 @@ window.app.ports.connectToSocket.subscribe((port) => {
     }
 
     window.app.ports.sendMessage.subscribe((message) => {
-        window.socket.send(message)
+        const buff = Buffer.from(message, "utf8")
+        window.socket.send(buff)
     })
 
     window.socket.onmessage = (event) => {
-        window.app.ports.receiveMessage.send(event.data)
+        event.data.text().then(result => {
+            window.app.ports.receiveMessage.send(JSON.parse(result))
+        })
+    }
+
+    window.app.ports.closeConnection.subscribe(() => {
+        window.socket.close()
+    })
+
+    window.socket.onclose = () => {
+        window.app.ports.isConnected.send(false)
     }
 })

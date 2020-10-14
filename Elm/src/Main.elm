@@ -1,13 +1,16 @@
 module Main exposing (..)
 
 import Browser
-import Html exposing (Html, a, div, footer, form, h1, h3, input, label, main_, span, text)
+import Html exposing (Html, a, div, footer, form, h1, h3, input, label, main_, p, small, span, strong, text)
 import Html.Attributes exposing (class, for, id, name, required, type_, value)
 import Html.Events exposing (onClick, onInput, onSubmit)
+import Json.Decode exposing (Error(..), Value, decodeValue)
+import Message exposing (Message, parseError)
 import Platform.Sub exposing (batch)
 import Port.Socket
     exposing
-        ( connectToSocket
+        ( closeConnection
+        , connectToSocket
         , isConnected
         , receiveMessage
         , sendMessage
@@ -23,7 +26,7 @@ type alias Form =
 
 type alias Model =
     { isConnected : Bool
-    , messages : List String
+    , messages : List Message
     , form : Form
     }
 
@@ -35,13 +38,14 @@ type Msg
     | ConfirmConnection Bool
     | EnteredMessage String
     | SendMessage
-    | ReceiveMessage String
+    | ParseMessage (Result Error Message)
+    | CloseConnection
 
 
 init : () -> ( Model, Cmd Msg )
 init _ =
     ( { isConnected = False
-      , messages = [ "" ]
+      , messages = [ Message.init ]
       , form =
             { userName = ""
             , userPort = ""
@@ -71,16 +75,39 @@ update msg model =
             ( { model | isConnected = val }, Cmd.none )
 
         SendMessage ->
-            ( model, sendMessage model.form.message )
-
-        ReceiveMessage message ->
             let
+                message =
+                    { user = model.form.userName, time = "", content = model.form.message }
+
+                encode =
+                    Message.encode message
+
                 new =
                     updateForm (\form -> { form | message = "" }) model
             in
-            ( { new | messages = List.append model.messages [ message ] }
-            , Cmd.none
-            )
+            ( { new | messages = List.append model.messages [ message ] }, sendMessage encode )
+
+        ParseMessage result ->
+            case result of
+                Ok message ->
+                    ( { model | messages = List.append model.messages [ message ] }, Cmd.none )
+
+                Err errors ->
+                    case errors of
+                        Field field _ ->
+                            ( { model | messages = List.append model.messages [ parseError field ] }, Cmd.none )
+
+                        Index index _ ->
+                            ( { model | messages = List.append model.messages [ parseError ("Error occurred at" ++ String.fromInt index) ] }, Cmd.none )
+
+                        Failure value _ ->
+                            ( { model | messages = List.append model.messages [ parseError value ] }, Cmd.none )
+
+                        OneOf _ ->
+                            ( { model | messages = List.append model.messages [ parseError "one of" ] }, Cmd.none )
+
+        CloseConnection ->
+            ( model, closeConnection () )
 
 
 updateForm : (Form -> Form) -> Model -> Model
@@ -101,7 +128,17 @@ chatView : Model -> Html Msg
 chatView model =
     let
         messagesView =
-            List.map (\msg -> div [ class "bubble" ] [ text msg ]) model.messages
+            List.map
+                (\msg ->
+                    div [ class "bubble__container" ]
+                        [ p []
+                            [ strong [ class "bubble-name" ] [ text msg.user ]
+                            , small [ class "bubble-time" ] [ text msg.time ]
+                            ]
+                        , p [ class "bubble-message" ] [ text msg.content ]
+                        ]
+                )
+                model.messages
     in
     div [ class "chat__container" ]
         [ div [ class "top_nav" ]
@@ -109,7 +146,11 @@ chatView model =
                 [ h3 [ id "greetings", class "greetings-name" ] [ text model.form.userName ]
                 , span [ class "greetings-connection" ] []
                 ]
-            , span [ class "logout" ] [ text "Logout" ]
+            , span
+                [ class "logout"
+                , onClick CloseConnection
+                ]
+                [ text (model.form.userPort ++ " Change port") ]
             ]
         , div [ id "chat-window", class "chat-window" ] messagesView
         , form [ id "send-chat", class "chat-box__container", onSubmit SendMessage ]
@@ -190,7 +231,7 @@ subscriptions : Model -> Sub Msg
 subscriptions _ =
     batch
         [ isConnected ConfirmConnection
-        , receiveMessage ReceiveMessage
+        , receiveMessage (ParseMessage << decodeValue Message.decode)
         ]
 
 
