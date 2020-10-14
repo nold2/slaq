@@ -75,7 +75,14 @@ update msg model =
             ( { model | isConnected = val }, Cmd.none )
 
         SendMessage ->
-            ( model, sendMessage model.form.message )
+            let
+                message =
+                    { user = model.form.userName, time = "", content = model.form.message }
+
+                encode =
+                    Message.encode message
+            in
+            ( model, sendMessage encode )
 
         ParseMessage result ->
             let

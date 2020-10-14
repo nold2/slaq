@@ -784,11 +784,11 @@ function _Debug_crash_UNUSED(identifier, fact1, fact2, fact3, fact4)
 
 function _Debug_regionToString(region)
 {
-	if (region.an.X === region.av.X)
+	if (region.an.Y === region.aw.Y)
 	{
-		return 'on line ' + region.an.X;
+		return 'on line ' + region.an.Y;
 	}
-	return 'on lines ' + region.an.X + ' through ' + region.av.X;
+	return 'on lines ' + region.an.Y + ' through ' + region.aw.Y;
 }
 
 
@@ -1857,9 +1857,9 @@ var _Platform_worker = F4(function(impl, flagDecoder, debugMetadata, args)
 	return _Platform_initialize(
 		flagDecoder,
 		args,
-		impl.a5,
-		impl.bd,
-		impl.ba,
+		impl.a7,
+		impl.be,
+		impl.bc,
 		function() { return function() {} }
 	);
 });
@@ -3928,9 +3928,9 @@ var _Browser_element = _Debugger_element || F4(function(impl, flagDecoder, debug
 	return _Platform_initialize(
 		flagDecoder,
 		args,
-		impl.a5,
-		impl.bd,
-		impl.ba,
+		impl.a7,
+		impl.be,
+		impl.bc,
 		function(sendToApp, initialModel) {
 			var view = impl.bg;
 			/**/
@@ -3964,9 +3964,9 @@ var _Browser_document = _Debugger_document || F4(function(impl, flagDecoder, deb
 	return _Platform_initialize(
 		flagDecoder,
 		args,
-		impl.a5,
-		impl.bd,
-		impl.ba,
+		impl.a7,
+		impl.be,
+		impl.bc,
 		function(sendToApp, initialModel) {
 			var divertHrefToApp = impl.am && impl.am(sendToApp)
 			var view = impl.bg;
@@ -3977,12 +3977,12 @@ var _Browser_document = _Debugger_document || F4(function(impl, flagDecoder, deb
 			{
 				_VirtualDom_divertHrefToApp = divertHrefToApp;
 				var doc = view(model);
-				var nextNode = _VirtualDom_node('body')(_List_Nil)(doc.aY);
+				var nextNode = _VirtualDom_node('body')(_List_Nil)(doc.a$);
 				var patches = _VirtualDom_diff(currNode, nextNode);
 				bodyNode = _VirtualDom_applyPatches(bodyNode, currNode, patches, sendToApp);
 				currNode = nextNode;
 				_VirtualDom_divertHrefToApp = 0;
-				(title !== doc.bc) && (_VirtualDom_doc.title = title = doc.bc);
+				(title !== doc.bd) && (_VirtualDom_doc.title = title = doc.bd);
 			});
 		}
 	);
@@ -4038,8 +4038,8 @@ function _Browser_makeAnimator(model, draw)
 
 function _Browser_application(impl)
 {
-	var onUrlChange = impl.a6;
-	var onUrlRequest = impl.a7;
+	var onUrlChange = impl.a8;
+	var onUrlRequest = impl.a9;
 	var key = function() { key.a(onUrlChange(_Browser_getUrl())); };
 
 	return _Browser_document({
@@ -4059,9 +4059,9 @@ function _Browser_application(impl)
 					var next = $elm$url$Url$fromString(href).a;
 					sendToApp(onUrlRequest(
 						(next
-							&& curr.aM === next.aM
-							&& curr.aC === next.aC
-							&& curr.aI.a === next.aI.a
+							&& curr.aN === next.aN
+							&& curr.aD === next.aD
+							&& curr.aJ.a === next.aJ.a
 						)
 							? $elm$browser$Browser$Internal(next)
 							: $elm$browser$Browser$External(href)
@@ -4069,13 +4069,13 @@ function _Browser_application(impl)
 				}
 			});
 		},
-		a5: function(flags)
+		a7: function(flags)
 		{
-			return A3(impl.a5, flags, _Browser_getUrl(), key);
+			return A3(impl.a7, flags, _Browser_getUrl(), key);
 		},
 		bg: impl.bg,
-		bd: impl.bd,
-		ba: impl.ba
+		be: impl.be,
+		bc: impl.bc
 	});
 }
 
@@ -4141,17 +4141,17 @@ var _Browser_decodeEvent = F2(function(decoder, event)
 function _Browser_visibilityInfo()
 {
 	return (typeof _VirtualDom_doc.hidden !== 'undefined')
-		? { a3: 'hidden', aZ: 'visibilitychange' }
+		? { a5: 'hidden', a0: 'visibilitychange' }
 		:
 	(typeof _VirtualDom_doc.mozHidden !== 'undefined')
-		? { a3: 'mozHidden', aZ: 'mozvisibilitychange' }
+		? { a5: 'mozHidden', a0: 'mozvisibilitychange' }
 		:
 	(typeof _VirtualDom_doc.msHidden !== 'undefined')
-		? { a3: 'msHidden', aZ: 'msvisibilitychange' }
+		? { a5: 'msHidden', a0: 'msvisibilitychange' }
 		:
 	(typeof _VirtualDom_doc.webkitHidden !== 'undefined')
-		? { a3: 'webkitHidden', aZ: 'webkitvisibilitychange' }
-		: { a3: 'hidden', aZ: 'visibilitychange' };
+		? { a5: 'webkitHidden', a0: 'webkitvisibilitychange' }
+		: { a5: 'hidden', a0: 'visibilitychange' };
 }
 
 
@@ -4232,12 +4232,12 @@ var _Browser_call = F2(function(functionName, id)
 function _Browser_getViewport()
 {
 	return {
-		aQ: _Browser_getScene(),
-		aU: {
+		aR: _Browser_getScene(),
+		aX: {
 			j: _Browser_window.pageXOffset,
 			k: _Browser_window.pageYOffset,
-			aV: _Browser_doc.documentElement.clientWidth,
-			aB: _Browser_doc.documentElement.clientHeight
+			aY: _Browser_doc.documentElement.clientWidth,
+			aC: _Browser_doc.documentElement.clientHeight
 		}
 	};
 }
@@ -4247,8 +4247,8 @@ function _Browser_getScene()
 	var body = _Browser_doc.body;
 	var elem = _Browser_doc.documentElement;
 	return {
-		aV: Math.max(body.scrollWidth, body.offsetWidth, elem.scrollWidth, elem.offsetWidth, elem.clientWidth),
-		aB: Math.max(body.scrollHeight, body.offsetHeight, elem.scrollHeight, elem.offsetHeight, elem.clientHeight)
+		aY: Math.max(body.scrollWidth, body.offsetWidth, elem.scrollWidth, elem.offsetWidth, elem.clientWidth),
+		aC: Math.max(body.scrollHeight, body.offsetHeight, elem.scrollHeight, elem.offsetHeight, elem.clientHeight)
 	};
 }
 
@@ -4271,15 +4271,15 @@ function _Browser_getViewportOf(id)
 	return _Browser_withNode(id, function(node)
 	{
 		return {
-			aQ: {
-				aV: node.scrollWidth,
-				aB: node.scrollHeight
+			aR: {
+				aY: node.scrollWidth,
+				aC: node.scrollHeight
 			},
-			aU: {
+			aX: {
 				j: node.scrollLeft,
 				k: node.scrollTop,
-				aV: node.clientWidth,
-				aB: node.clientHeight
+				aY: node.clientWidth,
+				aC: node.clientHeight
 			}
 		};
 	});
@@ -4309,18 +4309,18 @@ function _Browser_getElement(id)
 		var x = _Browser_window.pageXOffset;
 		var y = _Browser_window.pageYOffset;
 		return {
-			aQ: _Browser_getScene(),
-			aU: {
+			aR: _Browser_getScene(),
+			aX: {
 				j: x,
 				k: y,
-				aV: _Browser_doc.documentElement.clientWidth,
-				aB: _Browser_doc.documentElement.clientHeight
+				aY: _Browser_doc.documentElement.clientWidth,
+				aC: _Browser_doc.documentElement.clientHeight
 			},
-			a0: {
+			a2: {
 				j: x + rect.left,
 				k: y + rect.top,
-				aV: rect.width,
-				aB: rect.height
+				aY: rect.width,
+				aC: rect.height
 			}
 		};
 	});
@@ -4859,7 +4859,7 @@ var $elm$url$Url$Http = 0;
 var $elm$url$Url$Https = 1;
 var $elm$url$Url$Url = F6(
 	function (protocol, host, port_, path, query, fragment) {
-		return {ay: fragment, aC: host, aG: path, aI: port_, aM: protocol, aN: query};
+		return {az: fragment, aD: host, aH: path, aJ: port_, aN: protocol, aO: query};
 	});
 var $elm$core$String$contains = _String_contains;
 var $elm$core$String$length = _String_length;
@@ -5138,13 +5138,13 @@ var $elm$core$Task$perform = F2(
 			A2($elm$core$Task$map, toMessage, task));
 	});
 var $elm$browser$Browser$element = _Browser_element;
-var $author$project$Message$init = {a_: '', bb: '', be: ''};
+var $author$project$Message$init = {au: '', aV: '', aW: ''};
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $author$project$Main$init = function (_v0) {
 	return _Utils_Tuple2(
 		{
-			s: {N: '', ab: '', T: ''},
+			s: {N: '', T: '', U: ''},
 			ad: false,
 			n: _List_fromArray(
 				[$author$project$Message$init])
@@ -5165,7 +5165,7 @@ var $elm$core$Basics$composeL = F3(
 	});
 var $author$project$Message$Message = F3(
 	function (user, time, content) {
-		return {a_: content, bb: time, be: user};
+		return {au: content, aV: time, aW: user};
 	});
 var $NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$custom = $elm$json$Json$Decode$map2($elm$core$Basics$apR);
 var $elm$json$Json$Decode$field = _Json_decodeField;
@@ -5223,8 +5223,39 @@ var $author$project$Port$Socket$closeConnection = _Platform_outgoingPort(
 	});
 var $elm$json$Json$Encode$string = _Json_wrap;
 var $author$project$Port$Socket$connectToSocket = _Platform_outgoingPort('connectToSocket', $elm$json$Json$Encode$string);
+var $elm$json$Json$Encode$object = function (pairs) {
+	return _Json_wrap(
+		A3(
+			$elm$core$List$foldl,
+			F2(
+				function (_v0, obj) {
+					var k = _v0.a;
+					var v = _v0.b;
+					return A3(_Json_addField, k, v, obj);
+				}),
+			_Json_emptyObject(0),
+			pairs));
+};
+var $author$project$Message$encode = function (message) {
+	return A2(
+		$elm$json$Json$Encode$encode,
+		0,
+		$elm$json$Json$Encode$object(
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					'user',
+					$elm$json$Json$Encode$string(message.aW)),
+					_Utils_Tuple2(
+					'time',
+					$elm$json$Json$Encode$string(message.aV)),
+					_Utils_Tuple2(
+					'content',
+					$elm$json$Json$Encode$string(message.au))
+				])));
+};
 var $author$project$Message$parseError = function (errormessage) {
-	return {a_: errormessage, bb: 'Unknown', be: 'Internal decode error'};
+	return {au: errormessage, aV: 'Unknown', aW: 'Internal decode error'};
 };
 var $author$project$Port$Socket$sendMessage = _Platform_outgoingPort('sendMessage', $elm$json$Json$Encode$string);
 var $author$project$Main$updateForm = F2(
@@ -5246,7 +5277,7 @@ var $author$project$Main$update = F2(
 						function (form) {
 							return _Utils_update(
 								form,
-								{ab: userName});
+								{T: userName});
 						},
 						model),
 					$elm$core$Platform$Cmd$none);
@@ -5258,7 +5289,7 @@ var $author$project$Main$update = F2(
 						function (form) {
 							return _Utils_update(
 								form,
-								{T: userPort});
+								{U: userPort});
 						},
 						model),
 					$elm$core$Platform$Cmd$none);
@@ -5277,7 +5308,7 @@ var $author$project$Main$update = F2(
 			case 2:
 				return _Utils_Tuple2(
 					model,
-					$author$project$Port$Socket$connectToSocket(model.s.T));
+					$author$project$Port$Socket$connectToSocket(model.s.U));
 			case 3:
 				var val = msg.a;
 				return _Utils_Tuple2(
@@ -5286,9 +5317,11 @@ var $author$project$Main$update = F2(
 						{ad: val}),
 					$elm$core$Platform$Cmd$none);
 			case 5:
+				var message = {au: model.s.N, aV: '', aW: model.s.T};
+				var encode = $author$project$Message$encode(message);
 				return _Utils_Tuple2(
 					model,
-					$author$project$Port$Socket$sendMessage(model.s.N));
+					$author$project$Port$Socket$sendMessage(encode));
 			case 6:
 				var result = msg.a;
 				var _new = A2(
@@ -5507,7 +5540,7 @@ var $author$project$Main$chatView = function (model) {
 									]),
 								_List_fromArray(
 									[
-										$elm$html$Html$text(msg.be)
+										$elm$html$Html$text(msg.aW)
 									])),
 								A2(
 								$elm$html$Html$small,
@@ -5517,7 +5550,7 @@ var $author$project$Main$chatView = function (model) {
 									]),
 								_List_fromArray(
 									[
-										$elm$html$Html$text(msg.bb)
+										$elm$html$Html$text(msg.aV)
 									]))
 							])),
 						A2(
@@ -5528,7 +5561,7 @@ var $author$project$Main$chatView = function (model) {
 							]),
 						_List_fromArray(
 							[
-								$elm$html$Html$text(msg.a_)
+								$elm$html$Html$text(msg.au)
 							]))
 					]));
 		},
@@ -5566,7 +5599,7 @@ var $author$project$Main$chatView = function (model) {
 									]),
 								_List_fromArray(
 									[
-										$elm$html$Html$text(model.s.ab)
+										$elm$html$Html$text(model.s.T)
 									])),
 								A2(
 								$elm$html$Html$span,
@@ -5585,7 +5618,7 @@ var $author$project$Main$chatView = function (model) {
 							]),
 						_List_fromArray(
 							[
-								$elm$html$Html$text(model.s.T + ' Change port')
+								$elm$html$Html$text(model.s.U + ' Change port')
 							]))
 					])),
 				A2(
@@ -5712,7 +5745,7 @@ var $author$project$Main$loginView = function (model) {
 													[
 														$elm$html$Html$Attributes$id('name'),
 														$elm$html$Html$Attributes$class('input_text'),
-														$elm$html$Html$Attributes$value(model.s.ab),
+														$elm$html$Html$Attributes$value(model.s.T),
 														$elm$html$Html$Attributes$name('username'),
 														$elm$html$Html$Attributes$type_('text'),
 														$elm$html$Html$Attributes$required(true),
@@ -5741,7 +5774,7 @@ var $author$project$Main$loginView = function (model) {
 													[
 														$elm$html$Html$Attributes$id('port'),
 														$elm$html$Html$Attributes$class('input_text'),
-														$elm$html$Html$Attributes$value(model.s.T),
+														$elm$html$Html$Attributes$value(model.s.U),
 														$elm$html$Html$Attributes$name('port'),
 														$elm$html$Html$Attributes$type_('number'),
 														$elm$html$Html$Attributes$required(true),
@@ -5807,6 +5840,6 @@ var $author$project$Main$view = function (model) {
 	return model.ad ? $author$project$Main$chatView(model) : $author$project$Main$loginView(model);
 };
 var $author$project$Main$main = $elm$browser$Browser$element(
-	{a5: $author$project$Main$init, ba: $author$project$Main$subscriptions, bd: $author$project$Main$update, bg: $author$project$Main$view});
+	{a7: $author$project$Main$init, bc: $author$project$Main$subscriptions, be: $author$project$Main$update, bg: $author$project$Main$view});
 _Platform_export({'Main':{'init':$author$project$Main$main(
 	$elm$json$Json$Decode$succeed(0))(0)}});}(this));

@@ -6,9 +6,7 @@ window.app.ports.connectToSocket.subscribe((port) => {
     }
 
     window.app.ports.sendMessage.subscribe((message) => {
-        const parser = new Parser(message)
-        const json = JSON.stringify(parser.format());
-        const buff = Buffer.from(json, "utf8")
+        const buff = Buffer.from(message, "utf8")
         window.socket.send(buff)
     })
 
