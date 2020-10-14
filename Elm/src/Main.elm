@@ -1,9 +1,11 @@
 module Main exposing (..)
 
 import Browser
-import Html exposing (Html, a, div, footer, form, h1, h3, input, label, main_, span, text)
+import Html exposing (Html, a, div, footer, form, h1, h3, input, label, main_, p, small, span, strong, text)
 import Html.Attributes exposing (class, for, id, name, required, type_, value)
 import Html.Events exposing (onClick, onInput, onSubmit)
+import Json.Decode exposing (Error(..), Value, decodeValue)
+import Message exposing (Message, parseError)
 import Platform.Sub exposing (batch)
 import Port.Socket
     exposing
@@ -23,7 +25,7 @@ type alias Form =
 
 type alias Model =
     { isConnected : Bool
-    , messages : List String
+    , messages : List Message
     , form : Form
     }
 
@@ -35,13 +37,13 @@ type Msg
     | ConfirmConnection Bool
     | EnteredMessage String
     | SendMessage
-    | ReceiveMessage String
+    | ParseMessage (Result Error Message)
 
 
 init : () -> ( Model, Cmd Msg )
 init _ =
     ( { isConnected = False
-      , messages = [ "" ]
+      , messages = [ Message.init ]
       , form =
             { userName = ""
             , userPort = ""
@@ -73,14 +75,28 @@ update msg model =
         SendMessage ->
             ( model, sendMessage model.form.message )
 
-        ReceiveMessage message ->
+        ParseMessage result ->
             let
                 new =
                     updateForm (\form -> { form | message = "" }) model
             in
-            ( { new | messages = List.append model.messages [ message ] }
-            , Cmd.none
-            )
+            case result of
+                Ok message ->
+                    ( { new | messages = List.append model.messages [ message ] }, Cmd.none )
+
+                Err errors ->
+                    case errors of
+                        Field field _ ->
+                            ( { new | messages = List.append model.messages [ parseError field ] }, Cmd.none )
+
+                        Index index _ ->
+                            ( { new | messages = List.append model.messages [ parseError ("Error occurred at" ++ String.fromInt index) ] }, Cmd.none )
+
+                        Failure value _ ->
+                            ( { new | messages = List.append model.messages [ parseError value ] }, Cmd.none )
+
+                        OneOf _ ->
+                            ( { new | messages = List.append model.messages [ parseError "one of" ] }, Cmd.none )
 
 
 updateForm : (Form -> Form) -> Model -> Model
@@ -101,7 +117,17 @@ chatView : Model -> Html Msg
 chatView model =
     let
         messagesView =
-            List.map (\msg -> div [ class "bubble" ] [ text msg ]) model.messages
+            List.map
+                (\msg ->
+                    div [ class "bubble__container" ]
+                        [ p []
+                            [ strong [ class "bubble-name" ] [ text msg.user ]
+                            , small [ class "bubble-time" ] [ text msg.time ]
+                            ]
+                        , p [ class "bubble-message" ] [ text msg.content ]
+                        ]
+                )
+                model.messages
     in
     div [ class "chat__container" ]
         [ div [ class "top_nav" ]
@@ -190,7 +216,7 @@ subscriptions : Model -> Sub Msg
 subscriptions _ =
     batch
         [ isConnected ConfirmConnection
-        , receiveMessage ReceiveMessage
+        , receiveMessage (ParseMessage << decodeValue Message.decode)
         ]
 
 

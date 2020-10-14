@@ -5,6 +5,8 @@ port module Port.Socket exposing
     , sendMessage
     )
 
+import Json.Decode exposing (Value)
+
 
 port connectToSocket : String -> Cmd msg
 
@@ -15,4 +17,4 @@ port isConnected : (Bool -> msg) -> Sub msg
 port sendMessage : String -> Cmd msg
 
 
-port receiveMessage : (String -> msg) -> Sub msg
+port receiveMessage : (Value -> msg) -> Sub msg
