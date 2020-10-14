@@ -5,8 +5,11 @@
   "main": "index.js",
   "scripts": {
     "start:js": "cd Javascript && npm start",
-    "start:server": "docker run -p 8989:8989 -p 9898:9898 -it -v $PWD/ws-server:/app ubuntu bash -c \"/app/run_ws-server.sh\"\n",
-    "start": "npm run start:server && npm run start:js",
+    "start:elm": "cd Elm && npm start",
+    "start:server": "./ws-server/run_ws-server.sh",
+    "start:sever:docker": "docker run -p 8989:8989 -p 9898:9898 -it -v $PWD/ws-server:/app ubuntu bash -c \"/app/run_ws-server.sh\"\n",
+    "start:docker": "npm run start:server:docker && npm run start:js && npm run start:elm",
+    "start": "npm run start:server && npm run start:js && npm run start:elm",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

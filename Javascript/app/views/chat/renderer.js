@@ -9,7 +9,6 @@ const form = document.getElementById("send-chat");
 
 const logout = document.getElementById("logout");
 
-chatWindow.innerText = "It's quite here";
 chatBox.disabled = true;
 
 let socket;
