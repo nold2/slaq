@@ -5317,13 +5317,6 @@ var $author$project$Main$update = F2(
 						{ad: val}),
 					$elm$core$Platform$Cmd$none);
 			case 5:
-				var message = {au: model.s.N, aV: '', aW: model.s.T};
-				var encode = $author$project$Message$encode(message);
-				return _Utils_Tuple2(
-					model,
-					$author$project$Port$Socket$sendMessage(encode));
-			case 6:
-				var result = msg.a;
 				var _new = A2(
 					$author$project$Main$updateForm,
 					function (form) {
@@ -5332,11 +5325,26 @@ var $author$project$Main$update = F2(
 							{N: ''});
 					},
 					model);
+				var message = {au: model.s.N, aV: '', aW: model.s.T};
+				var encode = $author$project$Message$encode(message);
+				return _Utils_Tuple2(
+					_Utils_update(
+						_new,
+						{
+							n: A2(
+								$elm$core$List$append,
+								model.n,
+								_List_fromArray(
+									[message]))
+						}),
+					$author$project$Port$Socket$sendMessage(encode));
+			case 6:
+				var result = msg.a;
 				if (!result.$) {
 					var message = result.a;
 					return _Utils_Tuple2(
 						_Utils_update(
-							_new,
+							model,
 							{
 								n: A2(
 									$elm$core$List$append,
@@ -5352,7 +5360,7 @@ var $author$project$Main$update = F2(
 							var field = errors.a;
 							return _Utils_Tuple2(
 								_Utils_update(
-									_new,
+									model,
 									{
 										n: A2(
 											$elm$core$List$append,
@@ -5367,7 +5375,7 @@ var $author$project$Main$update = F2(
 							var index = errors.a;
 							return _Utils_Tuple2(
 								_Utils_update(
-									_new,
+									model,
 									{
 										n: A2(
 											$elm$core$List$append,
@@ -5383,7 +5391,7 @@ var $author$project$Main$update = F2(
 							var value = errors.a;
 							return _Utils_Tuple2(
 								_Utils_update(
-									_new,
+									model,
 									{
 										n: A2(
 											$elm$core$List$append,
@@ -5397,7 +5405,7 @@ var $author$project$Main$update = F2(
 						default:
 							return _Utils_Tuple2(
 								_Utils_update(
-									_new,
+									model,
 									{
 										n: A2(
 											$elm$core$List$append,

@@ -81,31 +81,30 @@ update msg model =
 
                 encode =
                     Message.encode message
-            in
-            ( model, sendMessage encode )
 
-        ParseMessage result ->
-            let
                 new =
                     updateForm (\form -> { form | message = "" }) model
             in
+            ( { new | messages = List.append model.messages [ message ] }, sendMessage encode )
+
+        ParseMessage result ->
             case result of
                 Ok message ->
-                    ( { new | messages = List.append model.messages [ message ] }, Cmd.none )
+                    ( { model | messages = List.append model.messages [ message ] }, Cmd.none )
 
                 Err errors ->
                     case errors of
                         Field field _ ->
-                            ( { new | messages = List.append model.messages [ parseError field ] }, Cmd.none )
+                            ( { model | messages = List.append model.messages [ parseError field ] }, Cmd.none )
 
                         Index index _ ->
-                            ( { new | messages = List.append model.messages [ parseError ("Error occurred at" ++ String.fromInt index) ] }, Cmd.none )
+                            ( { model | messages = List.append model.messages [ parseError ("Error occurred at" ++ String.fromInt index) ] }, Cmd.none )
 
                         Failure value _ ->
-                            ( { new | messages = List.append model.messages [ parseError value ] }, Cmd.none )
+                            ( { model | messages = List.append model.messages [ parseError value ] }, Cmd.none )
 
                         OneOf _ ->
-                            ( { new | messages = List.append model.messages [ parseError "one of" ] }, Cmd.none )
+                            ( { model | messages = List.append model.messages [ parseError "one of" ] }, Cmd.none )
 
         CloseConnection ->
             ( model, closeConnection () )
