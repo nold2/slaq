@@ -1,6 +1,6 @@
 class Parser {
-    constructor(name) {
-        this.name = name
+    constructor(user) {
+        this.user = user
     }
 
     setMessage(message) {
@@ -10,7 +10,7 @@ class Parser {
 
     toJSON() {
         this.json = {
-            user: this.name,
+            user: this.user,
             time: "",
             content: this.message
         }
