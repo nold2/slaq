@@ -1,44 +1,30 @@
 class Parser {
-    constructor(data) {
-        this.data = data
+    constructor(name) {
+        this.name = name
     }
 
-    date() {
-        return new Date()
+    setMessage(message) {
+        this.message = message
+        return this
     }
 
-    time() {
-        if (this.date().getMinutes() < 10) {
-            `${this.date().getHours()}:0${this.date().getMinutes()}`
+    toJSON() {
+        this.json = {
+            user: this.name,
+            time: "",
+            content: this.message
         }
-        return `${this.date().getHours()}:${this.date().getMinutes()}`
+        return this
     }
 
-    parseString() {
-        return {
-            "user": "anonymous",
-            "time": this.time(),
-            "content": this.data
-        }
+    toJSONString() {
+        this.jsonString = JSON.stringify(this.json)
+        return this
     }
 
-    parseJSON() {
-        return JSON.parse(this.data.toString('utf8'))
-    }
-
-    parse() {
-        try {
-            return this.parseJSON()
-        } catch (e) {
-            return this.parseString()
-        }
-    }
-
-    format() {
-        return {
-            "user": "Machine",
-            "time": this.time(),
-            "content": this.data
-        }
+    toBuffer() {
+        return Buffer.from(this.jsonString, "utf8")
     }
 }
+
+window.Parser = Parser

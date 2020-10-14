@@ -1,11 +1,13 @@
 const path = require("path");
 const {app, ipcMain} = require("electron");
+const {Buffer} = require("buffer/");
 
 const Window = require("./window");
 
 const main = () => {
     const mainWindow = new Window({
         file: path.join("app", "views", "login", "index.html"),
+        preload: Buffer
     });
 
     let chatWindow;
@@ -33,6 +35,10 @@ const main = () => {
     ipcMain.on("chat-sent", (event, content) => {
         chatWindow.webContents.send("load-chats", {content});
     });
+
+    ipcMain.on("logout", () => {
+        chatWindow = null
+    })
 
 };
 

@@ -46,6 +46,7 @@
 .chat-window {
     overflow-y: scroll;
     padding-left: 10px;
+    max-height: 100%;
 }
 
 .chat-box__container {
@@ -55,7 +56,7 @@
     display: flex;
     flex-wrap: nowrap;
     width: 100%;
-    margin: 0 10px 10px 0;
+    background-color: #FFF;
 }
 
 .chat-box__input {
@@ -64,6 +65,7 @@
     height: 24px;
     margin: 10px;
     flex: 0 0 80%;
+    border: none;
 }
 
 .chat-submit__button {
