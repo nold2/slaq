@@ -44,7 +44,7 @@
 }
 
 .chat-window {
-    overflow-y: auto;
+    overflow-y: scroll;
     padding-left: 10px;
 }
 
@@ -71,6 +71,10 @@
     border-radius: 4px;
     margin: 10px;
     border: none;
+}
+
+.bubble-name {
+    margin-right: 10px;
 }
 
 .chat-username {

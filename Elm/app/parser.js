@@ -9,21 +9,21 @@ class Parser {
 
     time() {
         if (this.date().getMinutes() < 10) {
-            `${this.date().getTime()} + ":0" +${this.date().getMinutes()}`
+            `${this.date().getHours()}:0${this.date().getMinutes()}`
         }
-        return `${this.date().getTime()} + ":" + ${this.date().getMinutes()}`
+        return `${this.date().getHours()}:${this.date().getMinutes()}`
     }
 
     parseString() {
         return {
             "user": "anonymous",
-            "date": this.time(),
+            "time": this.time(),
             "content": this.data
         }
     }
 
     parseJSON() {
-        return JSON.parse(this.data.toString())
+        return JSON.parse(this.data.toString('utf8'))
     }
 
     parse() {
@@ -37,10 +37,8 @@ class Parser {
     format() {
         return {
             "user": "Machine",
-            "date": this.time(),
+            "time": this.time(),
             "content": this.data
         }
     }
 }
-
-window.Parser = Parser

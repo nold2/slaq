@@ -1,48 +1,3 @@
-class Parser {
-    constructor(data) {
-        this.data = data
-    }
-
-    date() {
-        return new Date()
-    }
-
-    time() {
-        if (this.date().getMinutes() < 10) {
-            `${this.date().getHours()}:0${this.date().getMinutes()}`
-        }
-        return `${this.date().getHours()}:${this.date().getMinutes()}`
-    }
-
-    parseString() {
-        return {
-            "user": "anonymous",
-            "time": this.time(),
-            "content": this.data
-        }
-    }
-
-    parseJSON() {
-        return JSON.parse(this.data.toString('utf8'))
-    }
-
-    parse() {
-        try {
-            return this.parseJSON()
-        } catch (e) {
-            return this.parseString()
-        }
-    }
-
-    format() {
-        return {
-            "user": "Machine",
-            "time": this.time(),
-            "content": this.data
-        }
-    }
-}
-
 window.app.ports.connectToSocket.subscribe((port) => {
     window.socket = new WebSocket(`ws://localhost:${port}`)
 
@@ -59,9 +14,15 @@ window.app.ports.connectToSocket.subscribe((port) => {
 
     window.socket.onmessage = (event) => {
         event.data.text().then(result => {
-            console.log(result)
             window.app.ports.receiveMessage.send(JSON.parse(result))
         })
+    }
 
+    window.app.ports.closeConnection.subscribe(() => {
+        window.socket.close()
+    })
+
+    window.socket.onclose = () => {
+        window.app.ports.isConnected.send(false)
     }
 })

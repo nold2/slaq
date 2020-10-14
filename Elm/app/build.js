@@ -784,11 +784,11 @@ function _Debug_crash_UNUSED(identifier, fact1, fact2, fact3, fact4)
 
 function _Debug_regionToString(region)
 {
-	if (region.an.W === region.av.W)
+	if (region.an.X === region.av.X)
 	{
-		return 'on line ' + region.an.W;
+		return 'on line ' + region.an.X;
 	}
-	return 'on lines ' + region.an.W + ' through ' + region.av.W;
+	return 'on lines ' + region.an.X + ' through ' + region.av.X;
 }
 
 
@@ -5144,7 +5144,7 @@ var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $author$project$Main$init = function (_v0) {
 	return _Utils_Tuple2(
 		{
-			u: {N: '', aa: '', ab: ''},
+			s: {N: '', ab: '', T: ''},
 			ad: false,
 			n: _List_fromArray(
 				[$author$project$Message$init])
@@ -5215,6 +5215,12 @@ var $elm$core$List$append = F2(
 			return A3($elm$core$List$foldr, $elm$core$List$cons, ys, xs);
 		}
 	});
+var $elm$json$Json$Encode$null = _Json_encodeNull;
+var $author$project$Port$Socket$closeConnection = _Platform_outgoingPort(
+	'closeConnection',
+	function ($) {
+		return $elm$json$Json$Encode$null;
+	});
 var $elm$json$Json$Encode$string = _Json_wrap;
 var $author$project$Port$Socket$connectToSocket = _Platform_outgoingPort('connectToSocket', $elm$json$Json$Encode$string);
 var $author$project$Message$parseError = function (errormessage) {
@@ -5226,7 +5232,7 @@ var $author$project$Main$updateForm = F2(
 		return _Utils_update(
 			model,
 			{
-				u: transform(model.u)
+				s: transform(model.s)
 			});
 	});
 var $author$project$Main$update = F2(
@@ -5240,7 +5246,7 @@ var $author$project$Main$update = F2(
 						function (form) {
 							return _Utils_update(
 								form,
-								{aa: userName});
+								{ab: userName});
 						},
 						model),
 					$elm$core$Platform$Cmd$none);
@@ -5252,7 +5258,7 @@ var $author$project$Main$update = F2(
 						function (form) {
 							return _Utils_update(
 								form,
-								{ab: userPort});
+								{T: userPort});
 						},
 						model),
 					$elm$core$Platform$Cmd$none);
@@ -5271,7 +5277,7 @@ var $author$project$Main$update = F2(
 			case 2:
 				return _Utils_Tuple2(
 					model,
-					$author$project$Port$Socket$connectToSocket(model.u.ab));
+					$author$project$Port$Socket$connectToSocket(model.s.T));
 			case 3:
 				var val = msg.a;
 				return _Utils_Tuple2(
@@ -5282,8 +5288,8 @@ var $author$project$Main$update = F2(
 			case 5:
 				return _Utils_Tuple2(
 					model,
-					$author$project$Port$Socket$sendMessage(model.u.N));
-			default:
+					$author$project$Port$Socket$sendMessage(model.s.N));
+			case 6:
 				var result = msg.a;
 				var _new = A2(
 					$author$project$Main$updateForm,
@@ -5371,8 +5377,13 @@ var $author$project$Main$update = F2(
 								$elm$core$Platform$Cmd$none);
 					}
 				}
+			default:
+				return _Utils_Tuple2(
+					model,
+					$author$project$Port$Socket$closeConnection(0));
 		}
 	});
+var $author$project$Main$CloseConnection = {$: 7};
 var $author$project$Main$EnteredMessage = function (a) {
 	return {$: 4, a: a};
 };
@@ -5393,13 +5404,29 @@ var $elm$html$Html$Attributes$id = $elm$html$Html$Attributes$stringProperty('id'
 var $elm$html$Html$input = _VirtualDom_node('input');
 var $elm$html$Html$label = _VirtualDom_node('label');
 var $elm$html$Html$Attributes$name = $elm$html$Html$Attributes$stringProperty('name');
+var $elm$virtual_dom$VirtualDom$Normal = function (a) {
+	return {$: 0, a: a};
+};
+var $elm$virtual_dom$VirtualDom$on = _VirtualDom_on;
+var $elm$html$Html$Events$on = F2(
+	function (event, decoder) {
+		return A2(
+			$elm$virtual_dom$VirtualDom$on,
+			event,
+			$elm$virtual_dom$VirtualDom$Normal(decoder));
+	});
+var $elm$html$Html$Events$onClick = function (msg) {
+	return A2(
+		$elm$html$Html$Events$on,
+		'click',
+		$elm$json$Json$Decode$succeed(msg));
+};
 var $elm$html$Html$Events$alwaysStop = function (x) {
 	return _Utils_Tuple2(x, true);
 };
 var $elm$virtual_dom$VirtualDom$MayStopPropagation = function (a) {
 	return {$: 1, a: a};
 };
-var $elm$virtual_dom$VirtualDom$on = _VirtualDom_on;
 var $elm$html$Html$Events$stopPropagationOn = F2(
 	function (event, decoder) {
 		return A2(
@@ -5539,7 +5566,7 @@ var $author$project$Main$chatView = function (model) {
 									]),
 								_List_fromArray(
 									[
-										$elm$html$Html$text(model.u.aa)
+										$elm$html$Html$text(model.s.ab)
 									])),
 								A2(
 								$elm$html$Html$span,
@@ -5553,11 +5580,12 @@ var $author$project$Main$chatView = function (model) {
 						$elm$html$Html$span,
 						_List_fromArray(
 							[
-								$elm$html$Html$Attributes$class('logout')
+								$elm$html$Html$Attributes$class('logout'),
+								$elm$html$Html$Events$onClick($author$project$Main$CloseConnection)
 							]),
 						_List_fromArray(
 							[
-								$elm$html$Html$text('Logout')
+								$elm$html$Html$text(model.s.T + ' Change port')
 							]))
 					])),
 				A2(
@@ -5593,7 +5621,7 @@ var $author$project$Main$chatView = function (model) {
 								$elm$html$Html$Attributes$name('chat-box'),
 								$elm$html$Html$Attributes$id('chat-box'),
 								$elm$html$Html$Attributes$class('chat-box__input'),
-								$elm$html$Html$Attributes$value(model.u.N),
+								$elm$html$Html$Attributes$value(model.s.N),
 								$elm$html$Html$Events$onInput($author$project$Main$EnteredMessage)
 							]),
 						_List_Nil),
@@ -5620,22 +5648,6 @@ var $elm$html$Html$a = _VirtualDom_node('a');
 var $elm$html$Html$footer = _VirtualDom_node('footer');
 var $elm$html$Html$h1 = _VirtualDom_node('h1');
 var $elm$html$Html$main_ = _VirtualDom_node('main');
-var $elm$virtual_dom$VirtualDom$Normal = function (a) {
-	return {$: 0, a: a};
-};
-var $elm$html$Html$Events$on = F2(
-	function (event, decoder) {
-		return A2(
-			$elm$virtual_dom$VirtualDom$on,
-			event,
-			$elm$virtual_dom$VirtualDom$Normal(decoder));
-	});
-var $elm$html$Html$Events$onClick = function (msg) {
-	return A2(
-		$elm$html$Html$Events$on,
-		'click',
-		$elm$json$Json$Decode$succeed(msg));
-};
 var $elm$json$Json$Encode$bool = _Json_wrap;
 var $elm$html$Html$Attributes$boolProperty = F2(
 	function (key, bool) {
@@ -5700,7 +5712,7 @@ var $author$project$Main$loginView = function (model) {
 													[
 														$elm$html$Html$Attributes$id('name'),
 														$elm$html$Html$Attributes$class('input_text'),
-														$elm$html$Html$Attributes$value(model.u.aa),
+														$elm$html$Html$Attributes$value(model.s.ab),
 														$elm$html$Html$Attributes$name('username'),
 														$elm$html$Html$Attributes$type_('text'),
 														$elm$html$Html$Attributes$required(true),
@@ -5729,7 +5741,7 @@ var $author$project$Main$loginView = function (model) {
 													[
 														$elm$html$Html$Attributes$id('port'),
 														$elm$html$Html$Attributes$class('input_text'),
-														$elm$html$Html$Attributes$value(model.u.ab),
+														$elm$html$Html$Attributes$value(model.s.T),
 														$elm$html$Html$Attributes$name('port'),
 														$elm$html$Html$Attributes$type_('number'),
 														$elm$html$Html$Attributes$required(true),

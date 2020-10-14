@@ -9,7 +9,8 @@ import Message exposing (Message, parseError)
 import Platform.Sub exposing (batch)
 import Port.Socket
     exposing
-        ( connectToSocket
+        ( closeConnection
+        , connectToSocket
         , isConnected
         , receiveMessage
         , sendMessage
@@ -38,6 +39,7 @@ type Msg
     | EnteredMessage String
     | SendMessage
     | ParseMessage (Result Error Message)
+    | CloseConnection
 
 
 init : () -> ( Model, Cmd Msg )
@@ -98,6 +100,9 @@ update msg model =
                         OneOf _ ->
                             ( { new | messages = List.append model.messages [ parseError "one of" ] }, Cmd.none )
 
+        CloseConnection ->
+            ( model, closeConnection () )
+
 
 updateForm : (Form -> Form) -> Model -> Model
 updateForm transform model =
@@ -135,7 +140,11 @@ chatView model =
                 [ h3 [ id "greetings", class "greetings-name" ] [ text model.form.userName ]
                 , span [ class "greetings-connection" ] []
                 ]
-            , span [ class "logout" ] [ text "Logout" ]
+            , span
+                [ class "logout"
+                , onClick CloseConnection
+                ]
+                [ text (model.form.userPort ++ " Change port") ]
             ]
         , div [ id "chat-window", class "chat-window" ] messagesView
         , form [ id "send-chat", class "chat-box__container", onSubmit SendMessage ]
