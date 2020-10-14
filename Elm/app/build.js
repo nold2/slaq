@@ -4234,8 +4234,8 @@ function _Browser_getViewport()
 	return {
 		aR: _Browser_getScene(),
 		aX: {
-			j: _Browser_window.pageXOffset,
-			k: _Browser_window.pageYOffset,
+			k: _Browser_window.pageXOffset,
+			l: _Browser_window.pageYOffset,
 			aY: _Browser_doc.documentElement.clientWidth,
 			aC: _Browser_doc.documentElement.clientHeight
 		}
@@ -4276,8 +4276,8 @@ function _Browser_getViewportOf(id)
 				aC: node.scrollHeight
 			},
 			aX: {
-				j: node.scrollLeft,
-				k: node.scrollTop,
+				k: node.scrollLeft,
+				l: node.scrollTop,
 				aY: node.clientWidth,
 				aC: node.clientHeight
 			}
@@ -4311,14 +4311,14 @@ function _Browser_getElement(id)
 		return {
 			aR: _Browser_getScene(),
 			aX: {
-				j: x,
-				k: y,
+				k: x,
+				l: y,
 				aY: _Browser_doc.documentElement.clientWidth,
 				aC: _Browser_doc.documentElement.clientHeight
 			},
 			a2: {
-				j: x + rect.left,
-				k: y + rect.top,
+				k: x + rect.left,
+				l: y + rect.top,
 				aY: rect.width,
 				aC: rect.height
 			}
@@ -5146,7 +5146,7 @@ var $author$project$Main$init = function (_v0) {
 		{
 			s: {N: '', T: '', U: ''},
 			ad: false,
-			n: _List_fromArray(
+			j: _List_fromArray(
 				[$author$project$Message$init])
 		},
 		$elm$core$Platform$Cmd$none);
@@ -5331,9 +5331,9 @@ var $author$project$Main$update = F2(
 					_Utils_update(
 						_new,
 						{
-							n: A2(
+							j: A2(
 								$elm$core$List$append,
-								model.n,
+								model.j,
 								_List_fromArray(
 									[message]))
 						}),
@@ -5346,9 +5346,9 @@ var $author$project$Main$update = F2(
 						_Utils_update(
 							model,
 							{
-								n: A2(
+								j: A2(
 									$elm$core$List$append,
-									model.n,
+									model.j,
 									_List_fromArray(
 										[message]))
 							}),
@@ -5362,9 +5362,9 @@ var $author$project$Main$update = F2(
 								_Utils_update(
 									model,
 									{
-										n: A2(
+										j: A2(
 											$elm$core$List$append,
-											model.n,
+											model.j,
 											_List_fromArray(
 												[
 													$author$project$Message$parseError(field)
@@ -5377,9 +5377,9 @@ var $author$project$Main$update = F2(
 								_Utils_update(
 									model,
 									{
-										n: A2(
+										j: A2(
 											$elm$core$List$append,
-											model.n,
+											model.j,
 											_List_fromArray(
 												[
 													$author$project$Message$parseError(
@@ -5393,9 +5393,9 @@ var $author$project$Main$update = F2(
 								_Utils_update(
 									model,
 									{
-										n: A2(
+										j: A2(
 											$elm$core$List$append,
-											model.n,
+											model.j,
 											_List_fromArray(
 												[
 													$author$project$Message$parseError(value)
@@ -5407,9 +5407,9 @@ var $author$project$Main$update = F2(
 								_Utils_update(
 									model,
 									{
-										n: A2(
+										j: A2(
 											$elm$core$List$append,
-											model.n,
+											model.j,
 											_List_fromArray(
 												[
 													$author$project$Message$parseError('one of')
@@ -5420,7 +5420,12 @@ var $author$project$Main$update = F2(
 				}
 			default:
 				return _Utils_Tuple2(
-					model,
+					_Utils_update(
+						model,
+						{
+							j: _List_fromArray(
+								[$author$project$Message$init])
+						}),
 					$author$project$Port$Socket$closeConnection(0));
 		}
 	});
@@ -5429,6 +5434,15 @@ var $author$project$Main$EnteredMessage = function (a) {
 	return {$: 4, a: a};
 };
 var $author$project$Main$SendMessage = {$: 5};
+var $elm$json$Json$Encode$bool = _Json_wrap;
+var $elm$html$Html$Attributes$boolProperty = F2(
+	function (key, bool) {
+		return A2(
+			_VirtualDom_property,
+			key,
+			$elm$json$Json$Encode$bool(bool));
+	});
+var $elm$html$Html$Attributes$autofocus = $elm$html$Html$Attributes$boolProperty('autofocus');
 var $elm$html$Html$Attributes$stringProperty = F2(
 	function (key, string) {
 		return A2(
@@ -5573,7 +5587,7 @@ var $author$project$Main$chatView = function (model) {
 							]))
 					]));
 		},
-		model.n);
+		model.j);
 	return A2(
 		$elm$html$Html$div,
 		_List_fromArray(
@@ -5663,7 +5677,8 @@ var $author$project$Main$chatView = function (model) {
 								$elm$html$Html$Attributes$id('chat-box'),
 								$elm$html$Html$Attributes$class('chat-box__input'),
 								$elm$html$Html$Attributes$value(model.s.N),
-								$elm$html$Html$Events$onInput($author$project$Main$EnteredMessage)
+								$elm$html$Html$Events$onInput($author$project$Main$EnteredMessage),
+								$elm$html$Html$Attributes$autofocus(true)
 							]),
 						_List_Nil),
 						A2(
@@ -5689,14 +5704,6 @@ var $elm$html$Html$a = _VirtualDom_node('a');
 var $elm$html$Html$footer = _VirtualDom_node('footer');
 var $elm$html$Html$h1 = _VirtualDom_node('h1');
 var $elm$html$Html$main_ = _VirtualDom_node('main');
-var $elm$json$Json$Encode$bool = _Json_wrap;
-var $elm$html$Html$Attributes$boolProperty = F2(
-	function (key, bool) {
-		return A2(
-			_VirtualDom_property,
-			key,
-			$elm$json$Json$Encode$bool(bool));
-	});
 var $elm$html$Html$Attributes$required = $elm$html$Html$Attributes$boolProperty('required');
 var $author$project$Main$loginView = function (model) {
 	return A2(

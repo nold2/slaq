@@ -6,6 +6,7 @@ window.app.ports.connectToSocket.subscribe((port) => {
     }
 
     window.app.ports.sendMessage.subscribe((message) => {
+        console.log(message)
         const buff = Buffer.from(message, "utf8")
         window.socket.send(buff)
     })

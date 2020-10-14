@@ -2,7 +2,7 @@ module Main exposing (..)
 
 import Browser
 import Html exposing (Html, a, div, footer, form, h1, h3, input, label, main_, p, small, span, strong, text)
-import Html.Attributes exposing (class, for, id, name, required, type_, value)
+import Html.Attributes exposing (autofocus, class, for, id, name, required, type_, value)
 import Html.Events exposing (onClick, onInput, onSubmit)
 import Json.Decode exposing (Error(..), Value, decodeValue)
 import Message exposing (Message, parseError)
@@ -107,7 +107,7 @@ update msg model =
                             ( { model | messages = List.append model.messages [ parseError "one of" ] }, Cmd.none )
 
         CloseConnection ->
-            ( model, closeConnection () )
+            ( { model | messages = [ Message.init ] }, closeConnection () )
 
 
 updateForm : (Form -> Form) -> Model -> Model
@@ -162,6 +162,7 @@ chatView model =
                 , class "chat-box__input"
                 , value model.form.message
                 , onInput EnteredMessage
+                , autofocus True
                 ]
                 []
             , input
